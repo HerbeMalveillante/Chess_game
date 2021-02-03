@@ -19,6 +19,6 @@ Programme :
 
 Présentation :
 
-[ ] - mettre le code en commun sur un repo github
+[x] - mettre le code en commun sur un repo github
 
 [ ] - mettre en forme la présentation dans un notebook jupyter/colab
