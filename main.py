@@ -7,4 +7,7 @@ class Board(object):
     pass
 
 class Pion(object):
+    """
+il était une fois l'histoire de shrek
+    """
     pass
