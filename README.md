@@ -26,4 +26,4 @@ Présentation :
 
 Diagramme de classe : 
 
-![diagramme de classe](https://drive.google.com/file/d/1SMO_5teN7BHxIhJjzwObiKOkghltTs2M/view?usp=sharing "Diagramme de classe")
+![diagramme de classe](https://github.com/HerbeMalveillante/Chess_game/blob/master/DiagrammeClasseChess.png "Diagramme de classe")
