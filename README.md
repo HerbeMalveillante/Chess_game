@@ -22,3 +22,8 @@ Présentation :
 [x] - mettre le code en commun sur un repo github
 
 [ ] - mettre en forme la présentation dans un notebook jupyter/colab
+
+
+Diagramme de classe : 
+
+![diagramme de classe](https://drive.google.com/file/d/1SMO_5teN7BHxIhJjzwObiKOkghltTs2M/view?usp=sharing "Diagramme de classe")
