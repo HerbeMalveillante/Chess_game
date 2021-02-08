@@ -1,6 +1,6 @@
 # Chess game
 
-## this is a chess game made for a school project in python
+## this is a chess game made for a school project in python (french)
 
 Objectif final : 
 
@@ -11,11 +11,11 @@ Programme :
 
 [ ] - "Interface graphique" dans la console (avec curses sans doute)
 
-[ ] - Partie multijoueur sur un réseau local avec socketIO
+[ ] - Partie multijoueur sur un réseau local avec socketIO / Twisted
 
-[ ] - Vraie interface graphique avec tkinter
+[ ] - Vraie interface graphique avec tkinter (pourquoi ne pas la faire avant même curses ? ça a pas l'air si compliqué)
 
-[ ] - vérification des coups avec échec et mat
+[ ] - vérification des coups avec échec et mat (avec un arbre de déplacements)
 
 Présentation :
 
