@@ -1,6 +1,22 @@
 # main.py - chess board project
 import tkinter as tk
 import random
+from PIL import Image, ImageTk
+
+
+sprites = {
+
+"TW" : ImageTk.PhotoImage("sprites/WT.png"),
+"CW" : ImageTk.PhotoImage("sprites/WKN.png"),
+"FW" : ImageTk.PhotoImage("sprites/WB.png"),
+"RW" : ImageTk.PhotoImage("sprites/WK.png"),
+"QW" : ImageTk.PhotoImage("sprites/WQ.png")
+
+
+
+
+
+}
 
 
 
@@ -65,16 +81,32 @@ class Board(tk.Tk):
             return "beige" if color == "brown" else "brown"
             
         #implémentation sous forme de boutons :
-        for l,line in enumerate(self.plateau) : 
-            for c,case in enumerate(line) :
-                textButton = case.valeur if case is not None else " "
-                button=tk.Button(text=textButton, width = "2", height = "2", bg=color) 
-                button.grid(row = l, column = c)
-                color = toggle(color)
-            color = toggle(color)
+        #for l,line in enumerate(self.plateau) : 
+        #    for c,case in enumerate(line) :
+        #        textButton = case.valeur if case is not None else " "
+        #        button=tk.Button(text=textButton, width = "2", height = "2", bg=color) 
+        #        button.grid(row = l, column = c)
+        #        color = toggle(color)
+        #    color = toggle(color)
         
         #implémentation sous forme de canvas
-        canvas = tk.Canvas(bd=2, height=8, width=8)
+        canvas = tk.Canvas(bd=0, height=800, width=800)
+        
+        #on doit ensuite créer 64 carrés d'une couleur différente, sous forme
+        #de polygones avec la méthode canvas.create_rectangle(x0,y0,x1,y1, fill=color, outline="black")
+        for l, line in enumerate(self.plateau):
+        	for c, case in enumerate(line) :
+        		# dessin du plateau
+        		canvas.create_rectangle(l*100,c*100,l*100+100,c*100+100, fill=color, outline="black")
+        		# dessin des pièces
+        		
+        		sprPiece = f"{case.valeur}{case.couleur}" if case is not None else None
+        		if sprPiece is not None : 
+        			print(sprPiece)
+        		
+        		color = toggle(color)
+        	color = toggle(color)
+        canvas.pack()
                 
         
         
