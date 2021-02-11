@@ -98,7 +98,13 @@ class Board(tk.Tk):
             return "beige" if color == "brown" else "brown"
             
         def clickEvent(event):
-            print(f"clicked at x={event.x} ; y={event.y}")
+            
+            lettreIndex = ['a','b','c','d','e','f','g','h']
+            
+            colonne = event.x//100
+            ligne = event.y//100
+            print(f"clicked at x={event.x} ; y={event.y} | case {lettreIndex[colonne]}{8-ligne} | pion : {self.plateau[ligne][colonne].valeur}{self.plateau[ligne][colonne].couleur}")
+            
             
         #implémentation sous forme de boutons :
         #for l,line in enumerate(self.plateau) : 
