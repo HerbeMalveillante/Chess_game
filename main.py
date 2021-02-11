@@ -4,23 +4,6 @@ import random
 from PIL import Image, ImageTk
 
 
-sprites = {
-
-"TW" : ImageTk.PhotoImage("sprites/WT.png"),
-"CW" : ImageTk.PhotoImage("sprites/WKN.png"),
-"FW" : ImageTk.PhotoImage("sprites/WB.png"),
-"RW" : ImageTk.PhotoImage("sprites/WK.png"),
-"QW" : ImageTk.PhotoImage("sprites/WQ.png")
-
-
-
-
-
-}
-
-
-
-
 
 
 
