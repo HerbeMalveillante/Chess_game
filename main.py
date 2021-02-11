@@ -176,11 +176,86 @@ class Pion(object):
 
 
 class Noeud():
+    """
+    P = Pion
+    T = Tour
+    C = Cavalier
+    F = Fou
+    Q = Reine
+    K = Roi
+    """
     def __init__(self, positionDuPion):
-            self.valeur=positionDuPion
+            self.positionPion=positionDuPion
             self.branches=[]
             
+            
+            
+    def VerticalHaut(self,continuite=None):
+        if int(self.positionPion[1]) <8:
+            self.branches.append(
+                Noeud(self.positionPion[0]+str(int(self.positionPion[1])+1))
+                )
+            self.branches[-1].VerticalHaut()
+        
+    def VerticalBas(self, continuite=None):
+        if self.positionPion[1] >0:
+            self.branches.append(
+                Noeud(self.positionPion[0]+str(int(self.positionPion[1])-1))
+                )
+            self.branches[-1].VerticalBas(continuite)
     
+    
+    def HorizontalDroite(self, continuite=None):
+        if ord(self.positionPion[0].lower()) < 104 :
+            self.branches.append(
+                Noeud(chr(ord(self.positionPion[0].lower())+1)+self.positionPion[1])
+                                 )
+            self.branches[-1].HorizontalDroite(continuite)
+    
+    def HorizontalGauche(self, continuite=None):
+        if ord(self.positionPion[0].lower()) > 97:
+            self.branches.append( 
+                Noeud(chr(ord(self.positionPion[0].lower())-1)+self.positionPion[1])
+                )
+            self.branches[-1].HorizontalGauche(continuite)
+            
+    
+    
+    
+    def DiagonaleHautDroit(self, continuite=None):
+        if int(self.positionPion[1]) <8 and ord(self.positionPion[0].lower()) < 104:
+            self.branches.append(
+                Noeud(chr(ord(self.positionPion[0].lower())+1)+str(int(self.positionPion[1])+1))
+                )
+        self.branches[-1].DiagonaleHautDroit(continuite)
+        
+        
+    def DiagonaleHautGauche(self, continuite=None):
+        if int(self.positionPion[1]) <8 and ord(self.positionPion[0].lower()) > 97:
+            self.branches.append(
+                Noeud(chr(ord(self.positionPion[0].lower())-1)+str(int(self.positionPion[1])+1))
+                )
+        self.branches[-1].DiagonaleHautGauche(continuite)
+    
+    def DiagonaleBasDroit(self, continuite=None):
+        if self.positionPion[1] >0 and ord(self.positionPion[0].lower()) < 104:
+            self.branches.append(
+                Noeud(chr(ord(self.positionPion[0].lower())+1) + str(int(self.positionPion[1])-1))
+                      )
+        self.branches[-1].DiagonaleBasDroit(continuite)
+    
+    def DiagonaleBasGauche(self, continuite=None):
+        if self.positionPion[1] >0 and ord(self.positionPion[0].lower()) > 97:
+            self.branches.append(
+                Noeud(chr(ord(self.positionPion[0].lower())-1)+str(int(self.positionPion[1])-1))
+                )     
+        self.branches[-1].DiagonaleBasGauche(continuite)
+    
+    
+    
+            
+    
+
 class ArbreDeplacement():
     
     def __init__(self, positionPion, valeurPion):
@@ -200,10 +275,7 @@ class ArbreDeplacement():
         """
         
         if self.valeurPion == "P":
-            if self.position[1] == "2": 
-                self.racine.branches.append(
-                    Noeud()
-                    )
+            pass            
         
         if self.valeurPion == "T":
             pass
@@ -220,6 +292,28 @@ class ArbreDeplacement():
         if self.valeurPion == "K":
             pass
         
+        def dot(self):
+            """
+            Renvoie un str contenant tous les noeuds et toutes les arètes de l'arbre.
+            Ce str est interprétable par la fonction graphviz.from_string du module graphviz
+            pour la visualisation graphique de l'arbre directement dans le notebook :
+            Par exemple pour un arbre a :
+            graphviz.from_string(a.dot())
+            """
+            def representation(noeud):
+                # construit une liste de string, noeud par noeud, récursivement
+                if noeud is not None:
+                    #ajoute le noeud
+                    txt = (str(id(noeud)) + "[label = " +  str(noeud.positionPion) + "]\n")
+                    # Appel récursif de la fonction representation
+                    
+                    for caseSuivante in noeud.branches:
+                        txt += representation(caseSuivante)
+                        #ajoute l'arete correspondantes au noeud droit
+                        txt += (str(id(noeud)) + " -> " + str(id(caseSuivante)) + '\n')
+                    return txt
+
+            return "digraph g {\n" + representation(self.racine) + '}'
         
     
     
