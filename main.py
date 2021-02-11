@@ -132,6 +132,70 @@ class Pion(object):
     def __init__(self, valeur, couleur):
         self.valeur = valeur
         self.couleur = couleur
+    def promote(self, NouvelleValeur):
+        if NouvelleValeur.upper() in ["P","T","C","F","Q"]:
+            pass
+
+
+
+class Noeud():
+    def __init__(self, positionDuPion):
+            self.valeur=positionDuPion
+            self.branches=[]
+            
+    
+class ArbreDeplacement():
+    
+    def __init__(self, positionPion, valeurPion):
+        self.racine=Noeud(positionPion)
+        self.position= positionPion
+        self.valeurPion=valeurPion
+    
+    
+    def constructionArbre(self):
+        """
+        P = Pion
+        T = Tour
+        C = Cavalier
+        F = Fou
+        Q = Reine
+        K = Roi
+        """
+        
+        if self.valeurPion == "P":
+            if self.position[1] == "2": 
+                self.racine.branches.append(
+                    Noeud()
+                    )
+        
+        if self.valeurPion == "T":
+            pass
+        
+        if self.valeurPion == "C":
+            pass
+        
+        if self.valeurPion == "F":
+            pass
+        
+        if self.valeurPion == "Q":
+            pass
+        
+        if self.valeurPion == "K":
+            pass
+        
+        
+    
+    
+    
+    def searchCase(self):
+        pass
+        
+        
+        
+        
+        
+        
+        
         
 
 p = Board()
