@@ -46,9 +46,9 @@ class Board(tk.Tk):
             [None for i in range(8)],
             [None for i in range(8)],
             [None for i in range(8)],
+            #[None for i in range(8)],
             [Pion('P','W') for i in range(8)],
             [Pion('T','W'), Pion('C','W'), Pion('F','W'), Pion('Q','W'), Pion('R', 'W'), Pion('F','W'), Pion('C','W'), Pion('T','W')]
-            
             ]
             
         self.coordLettre = ['a','b','c','d','e','f','g','h']
@@ -86,6 +86,46 @@ class Board(tk.Tk):
         
         handle.putalpha(30)
         return handle
+
+    def toString(self):
+        
+        # on charge d'abord les deux listes d'indexs, lettre puis chiffre afin de communiquer
+        # la rotation actuelle du plateau.
+        
+        # une pièce et sa position est sous la forme "a8TB" (lettreChiffreValeurCouleur)
+        
+        sE = ""
+        
+        for l in range(len(self.plateau)):
+            for c in range(len(self.plateau[l])):
+                if self.plateau[l][c] is not None :
+                    sE += f"{self.coordLettre[c]}{self.coordChiffre[l]}{self.plateau[l][c].valeur}{self.plateau[l][c].couleur}" 
+        return sE
+    
+    def loadFromString(self, string):
+        piecesList = []
+        
+        for index, char in enumerate(string):
+            if index%4 == 0 : # nouvelle pièce :
+                piecesList.append("".join(string[index:index+4]))
+        
+        
+        
+        nouveauPlateau = [
+        [None for i in range(8)] for j in range(8)  
+        ]
+        
+        for i in piecesList :
+            lettreIndex = self.coordLettre.index(i[0])
+            chiffreIndex = self.coordChiffre.index(i[1])
+            pion = Pion(i[2], i[3])
+            
+            nouveauPlateau[chiffreIndex][lettreIndex] = pion
+        
+        self.plateau = nouveauPlateau
+        self.updateDisplay()
+        return nouveauPlateau
+
 
     def mouvePion(self, deplacement):
         pass
@@ -376,7 +416,9 @@ class ArbreDeplacement():
         
 
 p = Board()
+
+arbrePiece = Noeud("d1")
+print(p.loadFromString(p.toString()))
+
 p.mainloop()
 #p.updateDisplay()
-
-  
