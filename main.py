@@ -53,6 +53,8 @@ class Board(tk.Tk):
             [Pion('T','W'), Pion('C','W'), Pion('F','W'), Pion('Q','W'), Pion('R', 'W'), Pion('F','W'), Pion('C','W'), Pion('T','W')]
             ]
             
+        self.plateau[5][5] = Pion('Q','B')
+            
         self.coordLettre = ['a','b','c','d','e','f','g','h']
         self.coordChiffre =["8","7","6","5","4","3","2","1"]
         self.coupsJouables = []
@@ -134,9 +136,9 @@ class Board(tk.Tk):
         pass
     
     def retournePlateau(self):
-        self.plateau = np.flip(self.plateau, (0,1))
-        self.coordLettre = np.flip(self.coordLettre, 0)
-        self.coordChiffre = np.flip(self.coordChiffre, 0)
+        self.plateau = np.flip(self.plateau, (0,1)).tolist()
+        self.coordLettre = np.flip(self.coordLettre, 0).tolist()
+        self.coordChiffre = np.flip(self.coordChiffre, 0).tolist()
         self.updateDisplay()
         print("flipped the board")
     
