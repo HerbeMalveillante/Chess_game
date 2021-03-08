@@ -305,7 +305,10 @@ class Noeud():
             
             
             
-    def nord(self,continuite=None):
+    def nord(self,continuite=None):  
+        if continuite is not None:
+            if continuite ==0:
+                return None 
         if int(self.positionPion[1]) <8:
             self.branches.append(
                 Noeud(self.positionPion[0]+str(int(self.positionPion[1])+1))
@@ -313,7 +316,10 @@ class Noeud():
             self.branches[-1].nord()
         
     def sud(self, continuite=None):
-        if int(self.positionPion[1]) > 0:
+       if continuite is not None:
+            if continuite ==0:
+                return None
+       if int(self.positionPion[1]) > 1:
             self.branches.append(
                 Noeud(self.positionPion[0]+str(int(self.positionPion[1])-1))
                 )
@@ -321,6 +327,9 @@ class Noeud():
     
     
     def est(self, continuite=None):
+        if continuite is not None:
+            if continuite ==0:
+                return None
         if ord(self.positionPion[0].lower()) < 104 :
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())+1).upper()+self.positionPion[1])
@@ -328,6 +337,9 @@ class Noeud():
             self.branches[-1].est(continuite)
     
     def ouest(self, continuite=None):
+        if continuite is not None:
+            if continuite ==0:
+                return None
         if ord(self.positionPion[0].lower()) > 97:
             self.branches.append( 
                 Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+self.positionPion[1])
@@ -338,6 +350,9 @@ class Noeud():
     
     
     def nord_est(self, continuite=None):
+        if continuite is not None:
+            if continuite ==0:
+                return None
         if int(self.positionPion[1]) <8 and ord(self.positionPion[0].lower()) < 104:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())+1).upper()+str(int(self.positionPion[1])+1))
@@ -346,6 +361,9 @@ class Noeud():
         
         
     def nord_ouest(self, continuite=None):
+        if continuite is not None:
+            if continuite ==0:
+                return None
         if int(self.positionPion[1]) < 8 and ord(self.positionPion[0].lower()) > 97:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+str(int(self.positionPion[1])+1))
@@ -353,14 +371,20 @@ class Noeud():
             self.branches[-1].nord_ouest(continuite)
     
     def sud_est(self, continuite=None):
-        if int(self.positionPion[1]) >0 and ord(self.positionPion[0].lower()) < 104:
+        if continuite is not None:
+            if continuite ==0:
+                return None
+        if int(self.positionPion[1]) >1 and ord(self.positionPion[0].lower()) < 104:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())+1).upper() + str(int(self.positionPion[1])-1))
                       )
             self.branches[-1].sud_est(continuite)
     
     def sud_ouest(self, continuite=None):
-        if int(self.positionPion[1]) >0 and ord(self.positionPion[0].lower()) > 97:
+        if continuite is not None:
+            if continuite ==0:
+                return None
+        if int(self.positionPion[1]) >1 and ord(self.positionPion[0].lower()) > 97:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+str(int(self.positionPion[1])-1))
                 )     
@@ -400,7 +424,7 @@ class ArbreDeplacement():
         C = Cavalier
         F = Fou
         Q = Reine
-        K = Roi
+        R = Roi
         """
         
         if self.valeurPion == "P":
@@ -432,8 +456,15 @@ class ArbreDeplacement():
             self.racine.sud_ouest()
             
         
-        if self.valeurPion == "K":
-            pass
+        if self.valeurPion == "R":
+            self.racine.nord()
+            self.racine.sud()
+            self.racine.est()
+            self.racine.ouest()
+            self.racine.nord_est()
+            self.racine.nord_ouest()
+            self.racine.sud_est()
+            self.racine.sud_ouest()
         
         
     
@@ -454,12 +485,6 @@ class ArbreDeplacement():
         lst = []
         parcours(self.racine, lst)
         lst.pop(0)
-        for x in lst:
-            if x[1] == '0':
-                lst.remove(x) 
-        return lst
-        
-        
         return lst
         
         
