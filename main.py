@@ -329,17 +329,31 @@ class Noeud():
                 )     
             self.branches[-1].sud_ouest(continuite)
     
-    
-    
+        
+    def parcoursListe(self):
+        def parcoursPrefixe(arbre):
+            if type(arbre) == list:
+                #un arbre
+                return arbre[0] + parcoursPrefixe(arbre[0:])
+            #une feuille
+            return [arbre]
+        return parcoursPrefixe(self.branches)
+        
             
     
 
 class ArbreDeplacement():
-    
+    """
+    la classe arbre creer un arbre de deplacement d'un pion, sans verifiquation au niveau du plateau
+    pour obtenir l'arbre sous forme de liste:
+        creer l'arbre => ArbreDeplacement('case', 'valeur pion')
+        demander via le pion => pion.DeplacementPion()
+    """
     def __init__(self, positionPion, valeurPion):
         self.racine=Noeud(positionPion)
         self.position= positionPion
         self.valeurPion=valeurPion
+        self.constructionArbre()
     
     
     def constructionArbre(self):
@@ -384,34 +398,27 @@ class ArbreDeplacement():
         if self.valeurPion == "K":
             pass
         
-#        def dot(self):
-#            """
-#            Renvoie un str contenant tous les noeuds et toutes les arètes de l'arbre.
-#            Ce str est interprétable par la fonction graphviz.from_string du module graphviz
-#            pour la visualisation graphique de l'arbre directement dans le notebook :
-#            Par exemple pour un arbre a :
-#            graphviz.from_string(a.dot())
-#            """
-#            def representation(noeud):
-#                # construit une liste de string, noeud par noeud, récursivement
-#                if noeud is not None:
-#                    #ajoute le noeud
-#                    txt = (str(id(noeud)) + "[label = " +  str(noeud.positionPion) + "]\n")
-#                    # Appel récursif de la fonction representation
-#                    
-#                    for caseSuivante in noeud.branches:
-#                        txt += representation(caseSuivante)
-#                        #ajoute l'arete correspondantes au noeud droit
-#                        txt += (str(id(noeud)) + " -> " + str(id(caseSuivante)) + '\n')
-#                    return txt
-#
-#            return "digraph g {\n" + representation(self.racine) + '}'
         
     
+               
     
     
-    def searchCase(self):
-        pass
+        
+    def DeplacementPion(self):
+        """
+        renvoi la liste de toute les case posible du pion
+        """
+        def parcours(noeud, lst):
+            lst.append(noeud.positionPion)
+            for fils in noeud.branches:
+                parcours(fils, lst)
+            
+            
+        lst = []
+        parcours(self.racine, lst)
+        
+        
+        return lst
         
         
         
