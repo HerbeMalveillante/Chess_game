@@ -72,7 +72,7 @@ class Board(tk.Tk):
                         
         #Image.open('sprites/WT.png').show
                         
-        self.canvas = tk.Canvas(bd=0, height=830, width=830)
+        self.canvas = tk.Canvas(bd=0, height=830, width=830, cursor='hand2')
         #b = ImageTk.PhotoImage(file="sprites/WK.png")
         #self.canvas.create_image((50,50), image=b) # wtf pourquoi elles s'affichent pas ?
         #self.canvas.image = b
@@ -112,7 +112,7 @@ class Board(tk.Tk):
         
         
         nouveauPlateau = [
-        [None for i in range(8)] for j in range(8)  
+        [None for i in range(8)] for j in range(8)
         ]
         
         for i in piecesList :
@@ -214,6 +214,12 @@ class Board(tk.Tk):
         
         self.canvas.bind("<Button-1>", clickEvent)
         self.canvas.grid(row=1, column=0)
+        
+        
+        labelFrame = tk.LabelFrame(self, text="Board string representation")
+        labelFrame.grid(row=2, column=0)
+        label = tk.Label(labelFrame, text=self.toString(), width = 50, wraplength=500, padx=50, pady=10)
+        label.pack()
         
         
                 
@@ -418,7 +424,8 @@ class ArbreDeplacement():
 p = Board()
 
 arbrePiece = Noeud("d1")
-print(p.loadFromString(p.toString()))
+#p.loadFromString(p.toString())
+print('--------------')
 
 p.mainloop()
 #p.updateDisplay()
