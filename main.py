@@ -416,6 +416,11 @@ class ArbreDeplacement():
             
         lst = []
         parcours(self.racine, lst)
+        lst.pop(0)
+        for x in lst:
+            if x[1] == '0':
+                lst.remove(x) 
+        return lst
         
         
         return lst
