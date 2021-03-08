@@ -237,7 +237,6 @@ class Board(tk.Tk):
             
             self.canvas.create_oval(x*100-10+50, y*100-10+50, x*100+10+50, y*100+10+50, fill='blue', stipple='gray50', outline = None)
             
-            print("created oval")
             
             
             
