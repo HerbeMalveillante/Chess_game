@@ -6,14 +6,12 @@ Objectif final :
 
 Programme : 
 
-[ ] - Avoir un plateau d'échecs dématerialisé : pas de vérification des coups, pas d'échec et mat, 
+[x] - Avoir un plateau d'échecs dématerialisé : pas de vérification des coups, pas d'échec et mat, 
       juste des pièces qu'on bouge où on veut pour jouer avec ses amis
-
-[ ] - "Interface graphique" dans la console (avec curses sans doute)
 
 [ ] - Partie multijoueur sur un réseau local avec socketIO / Twisted
 
-[ ] - Vraie interface graphique avec tkinter (pourquoi ne pas la faire avant même curses ? ça a pas l'air si compliqué)
+[x] - Vraie interface graphique avec tkinter
 
 [ ] - vérification des coups avec échec et mat (avec un arbre de déplacements)
 
