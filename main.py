@@ -306,100 +306,70 @@ class Noeud():
             
             
             
-    def nord(self,continuite=None):  
-        if continuite is not None:
-            if continuite ==0:
-                return None 
+    def nord(self):  
         if int(self.positionPion[1]) <8:
             self.branches.append(
                 Noeud(self.positionPion[0]+str(int(self.positionPion[1])+1))
                 )
             self.branches[-1].nord()
         
-    def sud(self, continuite=None):
-       if continuite is not None:
-            if continuite ==0:
-                return None
+    def sud(self):
+
        if int(self.positionPion[1]) > 1:
             self.branches.append(
                 Noeud(self.positionPion[0]+str(int(self.positionPion[1])-1))
                 )
-            self.branches[-1].sud(continuite)
+            self.branches[-1].sud()
     
     
-    def est(self, continuite=None):
-        if continuite is not None:
-            if continuite ==0:
-                return None
+    def est(self):
+
         if ord(self.positionPion[0].lower()) < 104 :
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())+1).upper()+self.positionPion[1])
                                  )
-            self.branches[-1].est(continuite)
+            self.branches[-1].est()
     
-    def ouest(self, continuite=None):
-        if continuite is not None:
-            if continuite ==0:
-                return None
+    def ouest(self):
+
         if ord(self.positionPion[0].lower()) > 97:
             self.branches.append( 
                 Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+self.positionPion[1])
                 )
-            self.branches[-1].ouest(continuite)
+            self.branches[-1].ouest()
             
     
-    
-    
-    def nord_est(self, continuite=None):
-        if continuite is not None:
-            if continuite ==0:
-                return None
+    def nord_est(self):
         if int(self.positionPion[1]) <8 and ord(self.positionPion[0].lower()) < 104:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())+1).upper()+str(int(self.positionPion[1])+1))
                 )
-            self.branches[-1].nord_est(continuite)
+            self.branches[-1].nord_est()
         
         
-    def nord_ouest(self, continuite=None):
-        if continuite is not None:
-            if continuite ==0:
-                return None
+    def nord_ouest(self):
         if int(self.positionPion[1]) < 8 and ord(self.positionPion[0].lower()) > 97:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+str(int(self.positionPion[1])+1))
                 )
-            self.branches[-1].nord_ouest(continuite)
+            self.branches[-1].nord_ouest()
     
-    def sud_est(self, continuite=None):
-        if continuite is not None:
-            if continuite ==0:
-                return None
+    def sud_est(self):
         if int(self.positionPion[1]) >1 and ord(self.positionPion[0].lower()) < 104:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())+1).upper() + str(int(self.positionPion[1])-1))
                       )
-            self.branches[-1].sud_est(continuite)
+            self.branches[-1].sud_est()
     
-    def sud_ouest(self, continuite=None):
-        if continuite is not None:
-            if continuite ==0:
-                return None
+    def sud_ouest(self):
         if int(self.positionPion[1]) >1 and ord(self.positionPion[0].lower()) > 97:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+str(int(self.positionPion[1])-1))
                 )     
-            self.branches[-1].sud_ouest(continuite)
+            self.branches[-1].sud_ouest()
     
-        
-    def parcoursListe(self):
-        def parcoursPrefixe(arbre):
-            if type(arbre) == list:
-                #un arbre
-                return arbre[0] + parcoursPrefixe(arbre[0:])
-            #une feuille
-            return [arbre]
-        return parcoursPrefixe(self.branches)
+    def roi(self):
+        pass
         
             
     
@@ -411,13 +381,16 @@ class ArbreDeplacement():
         creer l'arbre => ArbreDeplacement('case', 'valeur pion')
         demander via le pion => pion.DeplacementPion()
     """
-    def __init__(self, positionPion, valeurPion):
+    def __init__(self, positionPion, valeurPion, board=None):
         self.racine=Noeud(positionPion)
         self.position= positionPion
         self.valeurPion=valeurPion
         self.constructionArbre()
-    
-    
+        self.plateau=board.plateau
+        self.coordLettre= board.coordLettre
+        self.coordChiffre= board.coordChiffre
+        
+        
     def constructionArbre(self):
         """
         P = Pion
@@ -458,14 +431,7 @@ class ArbreDeplacement():
             
         
         if self.valeurPion == "R":
-            self.racine.nord()
-            self.racine.sud()
-            self.racine.est()
-            self.racine.ouest()
-            self.racine.nord_est()
-            self.racine.nord_ouest()
-            self.racine.sud_est()
-            self.racine.sud_ouest()
+            self.racine.roi()
         
         
     
@@ -486,7 +452,14 @@ class ArbreDeplacement():
         lst = []
         parcours(self.racine, lst)
         lst.pop(0)
+        self.verification(lst)
         return lst
+        
+        
+        
+        
+    def verification(self, lst):
+        pass
         
         
         
