@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 import numpy as np
 import pygame
 import random
+import datetime
 
 pygame.mixer.init(44100, -16, 2, 512)
 pygame.mixer.init()
@@ -41,18 +42,20 @@ class Board(tk.Tk):
         
         self.plateau = [
             [Pion('T','B'), Pion('C','B'), Pion('F','B'), Pion('Q','B'), Pion('R', 'B'), Pion('F','B'), Pion('C','B'), Pion('T','B')],
-            [Pion('P','B') for i in range(8)],
+            #[Pion('P','B') for i in range(8)],
             [None for i in range(8)],
             [None for i in range(8)],
             [None for i in range(8)],
             [None for i in range(8)],
-            #[None for i in range(8)],
-            [Pion('P','W') for i in range(8)],
+            [None for i in range(8)],
+            [None for i in range(8)],
+            #[Pion('P','W') for i in range(8)],
             [Pion('T','W'), Pion('C','W'), Pion('F','W'), Pion('Q','W'), Pion('R', 'W'), Pion('F','W'), Pion('C','W'), Pion('T','W')]
             ]
             
         self.coordLettre = ['a','b','c','d','e','f','g','h']
         self.coordChiffre =["8","7","6","5","4","3","2","1"]
+        self.coupsJouables = []
         
         self.sprites = {
                         "TW" : ImageTk.PhotoImage(Image.open("sprites/WT.png").convert("RGBA").resize((75,75))),
@@ -146,6 +149,9 @@ class Board(tk.Tk):
         
     def updateDisplay(self):
     
+    
+        
+    
         self.canvas.delete("all")
     
         color = "beige"
@@ -162,11 +168,24 @@ class Board(tk.Tk):
             
             if colonne < 8 and ligne < 8 :
             
+                
                 pionstr = f"{self.plateau[ligne][colonne].valeur}{self.plateau[ligne][colonne].couleur}" if self.plateau[ligne][colonne] is not None else "Empty"
+                print(f"clicked at x={event.x} ; y={event.y} | case {self.coordLettre[colonne]}{self.coordChiffre[ligne]} | pion : {pionstr}")
                 if self.plateau[ligne][colonne] is not None :
                     playMoveSound()
-                print(f"clicked at x={event.x} ; y={event.y} | case {self.coordLettre[colonne]}{self.coordChiffre[ligne]} | pion : {pionstr}")
+                    arbreDeplacement = ArbreDeplacement(f'{self.coordLettre[colonne]}{self.coordChiffre[ligne]}'.upper(), f'{pionstr[0]}')
+                    print(pionstr[0])
+                    print(arbreDeplacement.DeplacementPion())
+                    self.coupsJouables = arbreDeplacement.DeplacementPion()
+                    self.updateDisplay()
+        
+            
                 
+
+                
+            
+                
+            
             
         #implémentation sous forme de boutons :
         #for l,line in enumerate(self.plateau) : 
@@ -207,6 +226,22 @@ class Board(tk.Tk):
                 color = toggle(color)
             color = toggle(color)
             
+        for position in self.coupsJouables : # affichage d'un point bleu pour les points jouables
+            lettre = position[0].lower()
+            nombre = position[1].lower()
+            
+            x = self.coordLettre.index(lettre)
+            y = self.coordChiffre.index(nombre)
+            
+            self.canvas.create_oval(x*100-10+50, y*100-10+50, x*100+10+50, y*100+10+50, fill='blue', stipple='gray50', outline = None)
+            
+            print("created oval")
+            
+            
+            
+            
+            
+            
         for i, coords in enumerate(self.coordLettre):
             self.canvas.create_text(i*100+9, 812 , text=coords,font="Times 15 italic bold")
         for i, coords in enumerate(self.coordChiffre):
@@ -219,6 +254,8 @@ class Board(tk.Tk):
         labelFrame = tk.LabelFrame(self, text="Board string representation")
         labelFrame.grid(row=2, column=0)
         label = tk.Label(labelFrame, text=self.toString(), width = 50, wraplength=500, padx=50, pady=10)
+        label.pack()
+        label = tk.Label(labelFrame, text=f"updated at {datetime.datetime.now()}")
         label.pack()
         
         
