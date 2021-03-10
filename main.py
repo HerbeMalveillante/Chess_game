@@ -39,6 +39,9 @@ class Board(tk.Tk):
         self.title("NSICHESS XTREME 2 DELUXE PREMIUM [CRACK]")
         #self.plateau = [[None for i in range(8)] for i in range(8)]
         
+        self.tour = "W"
+        self.selectedCase = None
+        
         
         self.plateau = [
             [Pion('T','B'), Pion('C','B'), Pion('F','B'), Pion('Q','B'), Pion('R', 'B'), Pion('F','B'), Pion('C','B'), Pion('T','B')],
@@ -168,18 +171,40 @@ class Board(tk.Tk):
             colonne = event.x//100
             ligne = event.y//100
             
-            if colonne < 8 and ligne < 8 :
+            if colonne < 8 and ligne < 8 : # si une case est sélectionnée
             
                 
                 pionstr = f"{self.plateau[ligne][colonne].valeur}{self.plateau[ligne][colonne].couleur}" if self.plateau[ligne][colonne] is not None else "Empty"
                 print(f"clicked at x={event.x} ; y={event.y} | case {self.coordLettre[colonne]}{self.coordChiffre[ligne]} | pion : {pionstr}")
-                if self.plateau[ligne][colonne] is not None :
+                if self.plateau[ligne][colonne] is not None and self.plateau[ligne][colonne].couleur == self.tour: # si on sélectionne une pièce de notre couleur
+                
+                	# si un pion est sélectionné
+                
                     playMoveSound()
-                    arbreDeplacement = ArbreDeplacement(f'{self.coordLettre[colonne]}{self.coordChiffre[ligne]}'.upper(), f'{pionstr[0]}')
+                    arbreDeplacement = ArbreDeplacement(f'{self.coordLettre[colonne]}{self.coordChiffre[ligne]}'.upper(), f'{pionstr[0]}', self)
                     print(pionstr[0])
                     print(arbreDeplacement.DeplacementPion())
                     self.coupsJouables = arbreDeplacement.DeplacementPion()
                     self.updateDisplay()
+                    self.selectedCase = f'{self.coordLettre[colonne]}{self.coordChiffre[ligne]}'.upper()
+                    
+                
+                elif f"{self.coordLettre[colonne]}{self.coordChiffre[ligne]}".upper() in self.coupsJouables: # on clique sur une case valide
+                	
+                	playMoveSound()
+                	print(f"piece in {self.selectedCase} have to move here")
+                	self.coupsJouables = []
+                	self.selectedCase = None
+                	self.tour = "B" if self.tour == "W" else "W"
+                	self.updateDisplay()
+                	
+                	
+                else : # si on clique sur n'importe quel autre endroit
+                	self.coupsJouables = []
+                	self.selectedCase = None
+                	self.updateDisplay()
+                	
+                	
         
             
                 
