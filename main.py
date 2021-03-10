@@ -176,7 +176,7 @@ class Board(tk.Tk):
                 
                 pionstr = f"{self.plateau[ligne][colonne].valeur}{self.plateau[ligne][colonne].couleur}" if self.plateau[ligne][colonne] is not None else "Empty"
                 print(f"clicked at x={event.x} ; y={event.y} | case {self.coordLettre[colonne]}{self.coordChiffre[ligne]} | pion : {pionstr}")
-                if self.plateau[ligne][colonne] is not None and self.plateau[ligne][colonne].couleur == self.tour: # si on sélectionne une pièce de notre couleur
+                if self.plateau[ligne][colonne] is not None and self.plateau[ligne][colonne].couleur == self.tour and f"{self.coordLettre[colonne]}{self.coordChiffre[ligne]}".upper() != self.selectedCase: # si on sélectionne une pièce de notre couleur
                 
                 	# si un pion est sélectionné
                 
@@ -187,17 +187,21 @@ class Board(tk.Tk):
                     self.coupsJouables = arbreDeplacement.DeplacementPion()
                     self.updateDisplay()
                     self.selectedCase = f'{self.coordLettre[colonne]}{self.coordChiffre[ligne]}'.upper()
-                    
+
                 
-                elif f"{self.coordLettre[colonne]}{self.coordChiffre[ligne]}".upper() in self.coupsJouables: # on clique sur une case valide
+                elif f"{self.coordLettre[colonne]}{self.coordChiffre[ligne]}".upper() in self.coupsJouables : # on clique sur une case valide
                 	
                 	playMoveSound()
-                	print(f"piece in {self.selectedCase} have to move here")
+                	
+                	self.plateau[ligne][colonne] = self.plateau[self.coordChiffre.index(self.selectedCase[1])][self.coordLettre.index(self.selectedCase[0].lower())]
+                	self.plateau[self.coordChiffre.index(self.selectedCase[1])][self.coordLettre.index(self.selectedCase[0].lower())] = None 
+                	print(f"Moved {self.selectedCase} to {self.coordLettre[colonne].upper()}{self.coordChiffre[ligne]}")
+                	
                 	self.coupsJouables = []
                 	self.selectedCase = None
                 	self.tour = "B" if self.tour == "W" else "W"
+                	#self.retournePlateau()
                 	self.updateDisplay()
-                	
                 	
                 else : # si on clique sur n'importe quel autre endroit
                 	self.coupsJouables = []
@@ -282,6 +286,8 @@ class Board(tk.Tk):
         label = tk.Label(labelFrame, text=self.toString(), width = 50, wraplength=500, padx=50, pady=10)
         label.pack()
         label = tk.Label(labelFrame, text=f"updated at {datetime.datetime.now()}")
+        label.pack()
+        label = tk.Label(labelFrame, text=f"{'White' if self.tour == 'W' else 'Black'} have to play.")
         label.pack()
         
         
