@@ -470,28 +470,42 @@ class ArbreDeplacement():
     
     
         
-    def DeplacementPion(self):
+ def DeplacementPion(self):
         """
         renvoi la liste de toute les case posible du pion
         """
-        def parcours(noeud, lst, couleur):
+        def parcours(noeud, lst, PionBase):
             
             case=noeud.positionPion.lower()
-            
+            print(case)
             xPlateau= self.coordLettre.index(case[0])
             yPlateau= self.coordChiffre.index(case[1])
-            
-            
-            if self.plateau[yPlateau][xPlateau] is None:
+           
+            coord=self.plateau[yPlateau][xPlateau]
+                    
+            #for i in range(len(noeud.branches)):                
+                
+            if coord is None:
+                print(" les coords ne corresponde pas a un pion")
                 lst.append(noeud.positionPion)
                 for fils in noeud.branches:
-                    parcours(fils, lst)
-            else: 
-
-                if self.plateau[yPlateau][xPlateau].couleur != couleur:
+                    parcours(fils, lst, PionBase)
+            
+    
+            elif coord is not None: 
+                print('les coords montre un pion')
+                if coord.couleur != PionBase.couleur:
+                    print('la couleur est opposer')
                     #si la couleur du pion sur le plateau est differente de notre pion 
                     lst.append(noeud.positionPion)
-        
+                            
+        xPion= self.coordLettre.index(self.position[0].lower())
+        yPion= self.coordChiffre.index(self.position[1])
+        PionBase= self.plateau[yPion][xPion]
+        lst=[]
+        for fils in self.racine.branches:
+            parcours(fils, lst, PionBase)
+        return lst
         
         
         
