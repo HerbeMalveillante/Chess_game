@@ -400,11 +400,152 @@ class Noeud():
             self.branches[-1].sud_ouest()
     
     def roi(self):
-        pass
-        
+        #nord
+        if int(self.positionPion[1]) <8:
+            self.branches.append(
+                Noeud(self.positionPion[0]+str(int(self.positionPion[1])+1))
+                )
+        #sud
+        if int(self.positionPion[1]) > 1:
+            self.branches.append(
+            Noeud(self.positionPion[0]+str(int(self.positionPion[1])-1))
+            )
+        #est
+        if ord(self.positionPion[0].lower()) < 104 :
+            self.branches.append(
+            Noeud(chr(ord(self.positionPion[0].lower())+1).upper()+self.positionPion[1])
+                )
+        #ouest
+        if ord(self.positionPion[0].lower()) > 97:
+            self.branches.append( 
+                Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+self.positionPion[1])
+                )
+        #nord-est
+        if int(self.positionPion[1]) <8 and ord(self.positionPion[0].lower()) < 104:
+            self.branches.append(
+                Noeud(chr(ord(self.positionPion[0].lower())+1).upper()+str(int(self.positionPion[1])+1))
+                )
+        #nord-ouest
+        if int(self.positionPion[1]) < 8 and ord(self.positionPion[0].lower()) > 97:
+            self.branches.append(
+                Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+str(int(self.positionPion[1])+1))
+                )
+        #sud-est
+        if int(self.positionPion[1]) >1 and ord(self.positionPion[0].lower()) < 104:
+            self.branches.append(
+                Noeud(chr(ord(self.positionPion[0].lower())+1).upper() + str(int(self.positionPion[1])-1))
+                )
+        #sud-ouest
+        if int(self.positionPion[1]) >1 and ord(self.positionPion[0].lower()) > 97:
+            self.branches.append(
+                Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+str(int(self.positionPion[1])-1))
+                )     
             
+    def pion(self,couleur,deuxCase=False):
+        if couleur == 1:
+            
+            if deuxCase==True:
+                    #nord
+                    if int(self.positionPion[1]) <8:
+                        self.branches.append(
+                            Noeud(self.positionPion[0]+str(int(self.positionPion[1])+1))
+                            )
+                        self.branches.append(
+                            Noeud(self.positionPion[0]+str(int(self.positionPion[1])+2))
+                            )
+            else:                
+                #nord
+                if int(self.positionPion[1]) <8:
+                    self.branches.append(
+                        Noeud(self.positionPion[0]+str(int(self.positionPion[1])+1))
+                        )
+            #nord-est
+            if int(self.positionPion[1]) <8 and ord(self.positionPion[0].lower()) < 104:
+                self.branches.append(
+                    Noeud(chr(ord(self.positionPion[0].lower())+1).upper()+str(int(self.positionPion[1])+1))
+                    )
+            #nord-ouest
+            if int(self.positionPion[1]) < 8 and ord(self.positionPion[0].lower()) > 97:
+                self.branches.append(
+                    Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+str(int(self.positionPion[1])+1))
+                    )
     
-
+        else:
+            
+            if deuxCase==True:
+                    #sud
+                    if int(self.positionPion[1]) > 0:
+                        self.branches.append(
+                            Noeud(self.positionPion[0]+str(int(self.positionPion[1])-1))
+                                )
+                        self.branches.append(
+                            Noeud(self.positionPion[0]+str(int(self.positionPion[1])-2))
+                                )
+            else:                
+                #sud
+                if int(self.positionPion[1]) > 0:
+                    self.branches.append(
+                        Noeud(self.positionPion[0]+str(int(self.positionPion[1])-1))
+                            )
+            #sud-est
+            if int(self.positionPion[1]) > 0 and ord(self.positionPion[0].lower()) < 104:
+                self.branches.append(
+                    Noeud(chr(ord(self.positionPion[0].lower())+1).upper() + str(int(self.positionPion[1])-1))
+                        )
+            #sud-ouest
+            if int(self.positionPion[1]) > 0 and ord(self.positionPion[0].lower()) > 97:
+                self.branches.append(
+                    Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+str(int(self.positionPion[1])-1))
+                        )
+                
+                
+                
+                
+    def cavalier(self):
+        
+        positionInitialeX=int(self.positionPion[1])
+        positionInitialeY=ord(self.positionPion[0].lower())
+        #haut haut droite et bas bas droite
+        if positionInitialeY+1 <= 104:
+            if positionInitialeX+2 <8:
+                self.branches.append(
+                    Noeud(chr(positionInitialeY+1).upper() + str(positionInitialeX+2))
+                          )
+            if positionInitialeX-2 > 0:
+                self.branches.append(
+                    Noeud(chr(positionInitialeY+1).upper() + str(positionInitialeX-2))
+                          )
+        #haut haut gauche et bas bas gauche        
+        if positionInitialeY-1 >= 97:
+            if positionInitialeX+2 <8:
+                self.branches.append(
+                    Noeud(chr(positionInitialeY-1).upper() + str(positionInitialeX+2))
+                          )
+            if positionInitialeX-2 > 0:
+                self.branches.append(
+                    Noeud(chr(positionInitialeY-1).upper() + str(positionInitialeX-2))
+                          )
+        #haut droite droite et bas droite droite        
+        if positionInitialeX+1 <8:
+            if positionInitialeY+2 <=104:
+                self.branches.append(
+                    Noeud(chr(positionInitialeY+2).upper() + str(positionInitialeX+1))
+                          )
+            if positionInitialeY-2 >=97:
+                self.branches.append(
+                    Noeud(chr(positionInitialeY-2).upper() + str(positionInitialeX+1))
+                          )
+                
+        #haut gauche gauche et bas gauche gauche
+        if positionInitialeX-1 >0:
+            if positionInitialeY+2 <=104:
+                self.branches.append(
+                    Noeud(chr(positionInitialeY+2).upper() + str(positionInitialeX-1))
+                          )
+            if positionInitialeY-2 >=97:
+                self.branches.append(
+                    Noeud(chr(positionInitialeY-2).upper() + str(positionInitialeX-1))
+                          )
 class ArbreDeplacement():
     """
     la classe arbre creer un arbre de deplacement d'un pion, sans verifiquation au niveau du plateau
@@ -416,11 +557,11 @@ class ArbreDeplacement():
         self.racine=Noeud(positionPion)
         self.position= positionPion
         self.valeurPion=valeurPion
-        self.constructionArbre()
         self.plateau=board.plateau
         self.coordLettre= board.coordLettre
         self.coordChiffre= board.coordChiffre
-        
+        self.constructionArbre()
+
         
     def constructionArbre(self):
         """
@@ -433,8 +574,23 @@ class ArbreDeplacement():
         """
         
         if self.valeurPion == "P":
-            pass            
-        
+            xPion= self.coordLettre.index(self.position[0].lower())
+            yPion= self.coordChiffre.index(self.position[1])
+            PionBase= self.plateau[yPion][xPion]
+            print(yPion)
+            if PionBase.couleur=='W':
+                
+                if self.position[1] == "2":
+                    self.racine.pion(1,True)           
+                else:
+                    self.racine.pion(1)
+            else:
+                print(self.position)
+                if self.position[1]== "7":
+                    self.racine.pion(0, True)
+                else:
+                    self.racine.pion(0)
+                
         if self.valeurPion == "T":
             self.racine.nord()
             self.racine.sud()
@@ -442,7 +598,7 @@ class ArbreDeplacement():
             self.racine.ouest()
         
         if self.valeurPion == "C":
-            pass
+            self.racine.cavalier()
         
         if self.valeurPion == "F":
             self.racine.nord_est()
@@ -462,7 +618,9 @@ class ArbreDeplacement():
             
         
         if self.valeurPion == "R":
+            print("c'est un roi")
             self.racine.roi()
+            print(self.racine.branches)
         
         
     
@@ -470,14 +628,13 @@ class ArbreDeplacement():
     
     
         
- def DeplacementPion(self):
+    def DeplacementPion(self):
         """
         renvoi la liste de toute les case posible du pion
         """
         def parcours(noeud, lst, PionBase):
             
             case=noeud.positionPion.lower()
-            print(case)
             xPlateau= self.coordLettre.index(case[0])
             yPlateau= self.coordChiffre.index(case[1])
            
@@ -486,25 +643,99 @@ class ArbreDeplacement():
             #for i in range(len(noeud.branches)):                
                 
             if coord is None:
-                print(" les coords ne corresponde pas a un pion")
                 lst.append(noeud.positionPion)
                 for fils in noeud.branches:
                     parcours(fils, lst, PionBase)
             
     
             elif coord is not None: 
-                print('les coords montre un pion')
                 if coord.couleur != PionBase.couleur:
-                    print('la couleur est opposer')
                     #si la couleur du pion sur le plateau est differente de notre pion 
                     lst.append(noeud.positionPion)
                             
+        
+        
+        
+        
+        def testPion(lst,couleur, PionBase, plateau):
+            liste=[]
+            
+            if couleur == 1:
+                if plateau[self.coordChiffre.index(lst[0][1])][self.coordLettre.index(lst[0][0].lower())] is None:
+                    liste.append(lst[0])
+                    print(lst)
+                    if lst[0][1]=='3':
+                        if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is None:
+                            liste.append(lst[1])
+                
+                
+                
+                if lst[1] not in liste:
+                    try:    
+                        if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
+                            if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())].couleur != PionBase.couleur:
+                                liste.append(lst[1])
+                    except:
+                        pass
+                try:
+                    if plateau[self.coordChiffre.index(lst[2][1])][self.coordLettre.index(lst[2][0].lower())] is not None:
+                        if plateau[self.coordChiffre.index(lst[2][1])][self.coordLettre.index(lst[2][0].lower())].couleur != PionBase.couleur:
+                            liste.append(lst[2])
+                except:
+                    pass
+                try:    
+                    if plateau[self.coordChiffre.index(lst[3][1])][self.coordLettre.index(lst[3][0].lower())] is not None:
+                        if plateau[self.coordChiffre.index(lst[3][1])][self.coordLettre.index(lst[3][0].lower())].couleur != PionBase.couleur:
+                            liste.append(lst[3])
+                except:
+                    pass
+                
+                return liste
+            
+            
+            else:
+                if plateau[self.coordChiffre.index(lst[0][1])][self.coordLettre.index(lst[0][0].lower())] is None:
+                    liste.append(lst[0])
+                    print(lst)
+                    if lst[0][1]=='6':
+                        if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is None:
+                            liste.append(lst[1])
+                if lst[1] not in liste:
+                    try:    
+                        if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
+                            if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())].couleur != PionBase.couleur:
+                                liste.append(lst[1])
+                    except:
+                        pass
+                try:
+                    if plateau[self.coordChiffre.index(lst[2][1])][self.coordLettre.index(lst[2][0].lower())] is not None:
+                        if plateau[self.coordChiffre.index(lst[2][1])][self.coordLettre.index(lst[2][0].lower())].couleur != PionBase.couleur:
+                            liste.append(lst[2])
+                except:
+                    pass
+                try:    
+                    if plateau[self.coordChiffre.index(lst[3][1])][self.coordLettre.index(lst[3][0].lower())] is not None:
+                        if plateau[self.coordChiffre.index(lst[3][1])][self.coordLettre.index(lst[3][0].lower())].couleur != PionBase.couleur:
+                            liste.append(lst[3])
+                except:
+                    pass
+                return liste
+        
+        
         xPion= self.coordLettre.index(self.position[0].lower())
         yPion= self.coordChiffre.index(self.position[1])
         PionBase= self.plateau[yPion][xPion]
         lst=[]
+        
         for fils in self.racine.branches:
             parcours(fils, lst, PionBase)
+        
+        if self.valeurPion == "P":
+            if PionBase.couleur == "W":
+                lst=testPion(lst,1, PionBase, self.plateau)
+            else:
+                lst=testPion(lst,0, PionBase, self.plateau)
+        
         return lst
         
         
