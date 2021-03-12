@@ -661,65 +661,49 @@ class ArbreDeplacement():
             liste=[]
             
             if couleur == 1:
-                if plateau[self.coordChiffre.index(lst[0][1])][self.coordLettre.index(lst[0][0].lower())] is None:
-                    liste.append(lst[0])
-                    print(lst)
-                    if lst[0][1]=='3':
-                        if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is None:
-                            liste.append(lst[1])
-                
-                
-                
-                if lst[1] not in liste:
-                    try:    
-                        if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
-                            if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())].couleur != PionBase.couleur:
-                                liste.append(lst[1])
-                    except:
-                        pass
-                try:
-                    if plateau[self.coordChiffre.index(lst[2][1])][self.coordLettre.index(lst[2][0].lower())] is not None:
-                        if plateau[self.coordChiffre.index(lst[2][1])][self.coordLettre.index(lst[2][0].lower())].couleur != PionBase.couleur:
-                            liste.append(lst[2])
-                except:
-                    pass
-                try:    
-                    if plateau[self.coordChiffre.index(lst[3][1])][self.coordLettre.index(lst[3][0].lower())] is not None:
-                        if plateau[self.coordChiffre.index(lst[3][1])][self.coordLettre.index(lst[3][0].lower())].couleur != PionBase.couleur:
-                            liste.append(lst[3])
-                except:
-                    pass
-                
+                for i in range(len(lst)):
+                    if i == 0:
+                        if plateau[self.coordChiffre.index(lst[0][1])][self.coordLettre.index(lst[0][0].lower())] is None:
+                            liste.append(lst[0])
+                            if lst[0][1]=='3':
+                                if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is None:
+                                    liste.append(lst[1])
+                    else:
+                        if lst[i] not in liste:
+
+                            if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())] is not None:
+                                if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())].couleur != PionBase.couleur:
+                                    liste.append(lst[i])
+                if len(liste) >1:
+                    if liste[0][0] == liste[1][0]:
+                        if int(liste[0][1])==int(liste[1][1])-1:
+                            if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
+                                liste.pop(1)
                 return liste
             
             
             else:
-                if plateau[self.coordChiffre.index(lst[0][1])][self.coordLettre.index(lst[0][0].lower())] is None:
-                    liste.append(lst[0])
-                    print(lst)
-                    if lst[0][1]=='6':
-                        if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is None:
-                            liste.append(lst[1])
-                if lst[1] not in liste:
-                    try:    
-                        if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
-                            if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())].couleur != PionBase.couleur:
-                                liste.append(lst[1])
-                    except:
-                        pass
-                try:
-                    if plateau[self.coordChiffre.index(lst[2][1])][self.coordLettre.index(lst[2][0].lower())] is not None:
-                        if plateau[self.coordChiffre.index(lst[2][1])][self.coordLettre.index(lst[2][0].lower())].couleur != PionBase.couleur:
-                            liste.append(lst[2])
-                except:
-                    pass
-                try:    
-                    if plateau[self.coordChiffre.index(lst[3][1])][self.coordLettre.index(lst[3][0].lower())] is not None:
-                        if plateau[self.coordChiffre.index(lst[3][1])][self.coordLettre.index(lst[3][0].lower())].couleur != PionBase.couleur:
-                            liste.append(lst[3])
-                except:
-                    pass
+                
+                for i in range(len(lst)):
+                    if i == 0:
+                        if plateau[self.coordChiffre.index(lst[0][1])][self.coordLettre.index(lst[0][0].lower())] is None:
+                            liste.append(lst[0])
+                            if lst[0][1]=='6':
+                                if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is None:
+                                    liste.append(lst[1])
+                    else:
+                        if lst[i] not in liste:
+
+                            if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())] is not None:
+                                if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())].couleur != PionBase.couleur:
+                                    liste.append(lst[i])
+                if len(liste) >1:
+                    if liste[0][0] == liste[1][0]:
+                        if int(liste[0][1])==int(liste[1][1])+1:
+                            if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
+                                liste.pop(1)
                 return liste
+                
         
         
         xPion= self.coordLettre.index(self.position[0].lower())
@@ -729,14 +713,15 @@ class ArbreDeplacement():
         
         for fils in self.racine.branches:
             parcours(fils, lst, PionBase)
+            
         
         if self.valeurPion == "P":
             if PionBase.couleur == "W":
                 lst=testPion(lst,1, PionBase, self.plateau)
             else:
                 lst=testPion(lst,0, PionBase, self.plateau)
-        
-        return lst
+            
+        return lst    
         
         
         
