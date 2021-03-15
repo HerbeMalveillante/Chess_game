@@ -7,18 +7,41 @@ import pygame
 import random
 import datetime
 
+
+
+# on prépare pygame pour jouer les sons :
+#on crée un mixeur pygame et on l'initialise
 pygame.mixer.init(44100, -16, 2, 512)
 pygame.mixer.init()
+# et on charge les sons
 sound1 = pygame.mixer.Sound("sounds/move6.ogg")
 sound2 = pygame.mixer.Sound("sounds/move7.ogg")
 
-
+#TODO
+#pour vérifier un échec : /!\ doit être lancé avant tous les mouvements pour vérifier
+#qu'on se met pas en échec
+#et si on est en échec à cause d'un coup adverse on doit vérifier que le coup permet de nous sortir de l'échec
+#-> tu prends toutes les pièces
+#-> tu demandes leurs arbres de déplacement
+#-> tu regardes si dans toutes ces cases y'a la position du roi adverse
+#-> si oui y'a échec
+#pour l'échec et mat : 
+#on regarde TOUS les mouvements possibles de TOUTES les pièces
+#on sauvegarde toutes ces possibilités dans un nouveau plateau
+#et on fait le test d'échec sur chacun de ces plateaux
+#si y'a aucun plateau qui n'est pas en échec alors c'est échec et mat.
 
 
 class Board(tk.Tk):
     """
-    La classe Board permet de représenter un plateau de jeu.
-    un object Board contient un plateau sous la forme d'une matrice
+    Initialise une fenêtre Tkinter, et définit
+    des attributs publics utilisés et potentiellement
+    modifiés par d'autres programmes : 
+        
+    l'attribut 'tour' contient la lettre de la couleur du joueur qui doit jouer ('W' ou 'B'), 'W' par défaut
+    l'attribut 'selectedCase' contient la case actuellement sélectionnée ou un None, utile pour connaître
+    l'état de l'action du joueur.
+    l'attribut 'plateau' est une matrice de dimension 2 contenant des objets Pion ou des None.
     [
     [x,x,x,x,x,x,x,x],
     [x,x,x,x,x,x,x,x],
@@ -29,34 +52,44 @@ class Board(tk.Tk):
     [x,x,x,x,x,x,x,x],
     [x,x,x,x,x,x,x,x]
     ]
-    
-    chaque emplacement 'x' peut contenir un objet Pion ou un None
+        
+    les attributs 'coordLettre' et 'coordChiffre' contiennent une légende sous forme de liste permettant de calculer
+    une coordonnée dans la matrice à partir d'une dénomination de case (par exemple 'D6') et inversement.
+    Ces liste sont retournées en même temps que le plateau afin de changer le point de vue du joueur
+    (coté noir ou coté blanc) en gardant une cohérence dans les cases.
+        
+    l'attribut 'coupsJouables' contient une liste de coups jouables par le joueur, indiquant les cases sur
+    lesquelles dessiner un point bleu.
+        
+    l'attribut sprite est un dictionnaire associant une dénomination de pion (par exemple 'TW' pour 'Tour White')
+    à une image Tkinter pouvant être utilisée dans le canvas.
+        
+    l'attribut 'canvas' contient un objet canvas, sur lequel est dessiné la fenêtre de jeu. Cet attribut est notemment
+    modifié par la méthode 'updateDisplay'.
     """
     
-    
     def __init__(self, *args, **kwargs):
-        tk.Tk.__init__(self, *args, **kwargs)
+        """
+        TODO
+        """
+    
+        tk.Tk.__init__(self, *args, **kwargs) # initialisation de la fenêtre de jeu
         self.title("NSICHESS XTREME 2 DELUXE PREMIUM [CRACK]")
-        #self.plateau = [[None for i in range(8)] for i in range(8)]
         
-        self.tour = "W"
+        self.tour = "W" # les blancs commencent
         self.selectedCase = None
         
         
         self.plateau = [
             [Pion('T','B'), Pion('C','B'), Pion('F','B'), Pion('Q','B'), Pion('R', 'B'), Pion('F','B'), Pion('C','B'), Pion('T','B')],
-            #[Pion('P','B') for i in range(8)],
+            [Pion('P','B') for i in range(8)],
             [None for i in range(8)],
             [None for i in range(8)],
             [None for i in range(8)],
             [None for i in range(8)],
-            [None for i in range(8)],
-            [None for i in range(8)],
-            #[Pion('P','W') for i in range(8)],
+            [Pion('P','W') for i in range(8)],
             [Pion('T','W'), Pion('C','W'), Pion('F','W'), Pion('Q','W'), Pion('R', 'W'), Pion('F','W'), Pion('C','W'), Pion('T','W')]
             ]
-            
-        self.plateau[5][5] = Pion('Q','B')
             
         self.coordLettre = ['a','b','c','d','e','f','g','h']
         self.coordChiffre =["8","7","6","5","4","3","2","1"]
@@ -77,33 +110,23 @@ class Board(tk.Tk):
                         "QB" : ImageTk.PhotoImage(Image.open("sprites/BQ.png").convert("RGBA").resize((75,75))),
                         "PB" : ImageTk.PhotoImage(Image.open("sprites/BP.png").convert("RGBA").resize((75,75)))
                         }
-                        
-        #Image.open('sprites/WT.png').show
-                        
-        self.canvas = tk.Canvas(bd=0, height=830, width=830, cursor='hand2')
-        #b = ImageTk.PhotoImage(file="sprites/WK.png")
-        #self.canvas.create_image((50,50), image=b) # wtf pourquoi elles s'affichent pas ?
-        #self.canvas.image = b
-        #self.canvas.pack()            
+                                       
+        self.canvas = tk.Canvas(bd=0, height=830, width=830, cursor='hand2')         
         
-        
-        self.updateDisplay()
-    
-    def transparent(self, path):
-        handle = Image.open(path)
-        
-        handle.putalpha(30)
-        return handle
+        self.updateDisplay() # on met à jour l'affichage lors de l'initialisation.
 
     def toString(self):
+        """
+        retourne une représentation sous forme de string du plateau de jeu
+        afin de l'envoyer à une autre instance du programme pour une partie multijoueur.
+        """
         
         # on charge d'abord les deux listes d'indexs, lettre puis chiffre afin de communiquer
         # la rotation actuelle du plateau.
-        
         # une pièce et sa position est sous la forme "a8TB" (lettreChiffreValeurCouleur)
+        #TODO ajouter la variable "tour" afin de communiquer la personne qui est censé jouer au prochain tour.
         
         sE = ""
-        
         for l in range(len(self.plateau)):
             for c in range(len(self.plateau[l])):
                 if self.plateau[l][c] is not None :
@@ -111,34 +134,42 @@ class Board(tk.Tk):
         return sE
     
     def loadFromString(self, string):
+        """
+        prend en argument un string généré par la méthode 'toString' et 
+        modifie le plateau de jeu en conséquence et le retourne
+        """
         piecesList = []
         
         for index, char in enumerate(string):
-            if index%4 == 0 : # nouvelle pièce :
+            if index%4 == 0 : # nouvelle pièce tous les quatre caractères.
                 piecesList.append("".join(string[index:index+4]))
-        
-        
-        
+        # création d'un plateau vide
         nouveauPlateau = [
         [None for i in range(8)] for j in range(8)
         ]
         
         for i in piecesList :
+            # on récupère les coordonées matricielles de la pièce grâce à la dénomination de la case
             lettreIndex = self.coordLettre.index(i[0])
             chiffreIndex = self.coordChiffre.index(i[1])
+            # on récupère la valeur de la pièce grâce aux deux autres caractères
             pion = Pion(i[2], i[3])
             
+            # on ajoute la pièce dans le nouveau plateau
             nouveauPlateau[chiffreIndex][lettreIndex] = pion
         
+        # on met à jour le plateau et on actualise l'affichage.
         self.plateau = nouveauPlateau
         self.updateDisplay()
         return nouveauPlateau
-
-
-    def mouvePion(self, deplacement):
-        pass
     
     def retournePlateau(self):
+        """
+        retourne le plateau. Attention : cette fonction ne modifie pas juste l'affichage,
+        elle retourne littéralement toutes les matrices. De cette façon, on peut conserver
+        une très bonne logique quand aux dénominations des cases.
+        """
+    
         self.plateau = np.flip(self.plateau, (0,1)).tolist()
         self.coordLettre = np.flip(self.coordLettre, 0).tolist()
         self.coordChiffre = np.flip(self.coordChiffre, 0).tolist()
@@ -153,90 +184,109 @@ class Board(tk.Tk):
         pass
         
     def updateDisplay(self):
-    
+        """
+        Cette fonction met à jour l'affichage de la fenêtre Tkinter.
+        C'est ici que toute la partie graphique s'effectue
+        """
     
         
     
-        self.canvas.delete("all")
+        self.canvas.delete("all") # on supprime l'affichage actuel
     
-        color = "beige"
+        color = "beige" # on définit la première couleur de la case
         def toggle(color):
+            """
+            prend un string "beige" ou "brown" en entrée, et l'inverse,
+            permettant de dessiner le plateau avec des cases de couleurs
+            différentes.
+            """
             return "beige" if color == "brown" else "brown"
+            
         def playMoveSound():
+            """
+            joue un son aléatoire parmi les sons définis au début du programme
+            """
             sounds = [sound1, sound2]
             return pygame.mixer.Sound.play(random.choice(sounds))
             
         def clickEvent(event):
+            """
+            cette fonction est appelée à chaque fois qu'un clic est effectué
+            sur le canvas. Il gère la sélection des pièces durant les différentes
+            actions possibles (sélection/déselection d'une pièce, mouvement possible ou impossible,
+            clic ailleurs que sur une case, etc)
+            """
             
-            colonne = event.x//100
-            ligne = event.y//100
+            colonne = event.x//100 # comme le canvas fait 800 pixels, on récupère les 
+            ligne = event.y//100   # coordonnées matricielles de la case de cette façon
             
             if colonne < 8 and ligne < 8 : # si une case est sélectionnée
             
-                
+                # calcule la pièce sur laquelle on a cliqué, ou "Empty" si la case est vide.
                 pionstr = f"{self.plateau[ligne][colonne].valeur}{self.plateau[ligne][colonne].couleur}" if self.plateau[ligne][colonne] is not None else "Empty"
+                # affiche un string de débuggage pour le clic.
                 print(f"clicked at x={event.x} ; y={event.y} | case {self.coordLettre[colonne]}{self.coordChiffre[ligne]} | pion : {pionstr}")
-                if self.plateau[ligne][colonne] is not None and self.plateau[ligne][colonne].couleur == self.tour and f"{self.coordLettre[colonne]}{self.coordChiffre[ligne]}".upper() != self.selectedCase: # si on sélectionne une pièce de notre couleur
                 
-                	# si un pion est sélectionné
+                # si on sélectionne une pièce de notre couleur
+                if self.plateau[ligne][colonne] is not None and self.plateau[ligne][colonne].couleur == self.tour and f"{self.coordLettre[colonne]}{self.coordChiffre[ligne]}".upper() != self.selectedCase:
                 
-                    playMoveSound()
+                    playMoveSound() # on joue un son
+                    
+                    # on récupère l'arbre de déplacement de la pièce sélectionnée.
                     arbreDeplacement = ArbreDeplacement(f'{self.coordLettre[colonne]}{self.coordChiffre[ligne]}'.upper(), f'{pionstr[0]}', self)
-                    print(pionstr[0])
-                    print(arbreDeplacement.DeplacementPion())
-                    self.coupsJouables = arbreDeplacement.DeplacementPion()
+                    
+                    print(arbreDeplacement.DeplacementPion()) # debug : on affiche dans la console toutes les cases sur lesquelles la pièce peut se déplacer
+                    self.coupsJouables = arbreDeplacement.DeplacementPion() # on stocke toutes ces cases dans l'attribut de classe 'coupsJouables'
+                    self.updateDisplay() # on met à jour l'affichage
+                    self.selectedCase = f'{self.coordLettre[colonne]}{self.coordChiffre[ligne]}'.upper() # on stocke la pièce selectionnée dans l'attribut de classe 'selectedCase'
+
+                # si on clique sur une case valide pour le déplacement: 
+                # en effet, si la liste self.coupsJouables n'est pas vide c'est qu'une pièce est sélectionnée.
+                elif f"{self.coordLettre[colonne]}{self.coordChiffre[ligne]}".upper() in self.coupsJouables :
+                    
+                    playMoveSound() # on joue un son
+                    
+                    # on copie la pièce qui se déplace à sa nouvelle position, prenant potentiellement la place d'une pièce mangée.
+                    self.plateau[ligne][colonne] = self.plateau[self.coordChiffre.index(self.selectedCase[1])][self.coordLettre.index(self.selectedCase[0].lower())]
+                    # l'ancienne position de la pièce doit forcément être vide, on met donc une case vide à cette position.
+                    self.plateau[self.coordChiffre.index(self.selectedCase[1])][self.coordLettre.index(self.selectedCase[0].lower())] = None 
+                    print(f"Moved {self.selectedCase} to {self.coordLettre[colonne].upper()}{self.coordChiffre[ligne]}")
+                    
+                    # le tour est terminé, on réinitialise les attributs de sélection
+                    self.coupsJouables = []
+                    self.selectedCase = None
+                    # on change le tour : c'est au joueur adverse de jouer.
+                    self.tour = "B" if self.tour == "W" else "W"
+                    
+                    # ici, dilemne : soit on retourne le plateau, permettant à la personne qui joue
+                    # d'avoir toujours ses pions vers le bas, mais c'est assez désagréable à regarder
+                    # et on ne s'y retrouve pas, soit on actualise simplement l'affichage
+                    # (l'affichage est automatiquement mis à jour quand on retourne le plateau)
+                    # nous avons choisi de simplement mettre à jour l'affichage : c'est plus confortable,
+                    # surtout sur mobile.
+                    
+                    #self.retournePlateau()
                     self.updateDisplay()
-                    self.selectedCase = f'{self.coordLettre[colonne]}{self.coordChiffre[ligne]}'.upper()
-
-                
-                elif f"{self.coordLettre[colonne]}{self.coordChiffre[ligne]}".upper() in self.coupsJouables : # on clique sur une case valide
-                	
-                	playMoveSound()
-                	
-                	self.plateau[ligne][colonne] = self.plateau[self.coordChiffre.index(self.selectedCase[1])][self.coordLettre.index(self.selectedCase[0].lower())]
-                	self.plateau[self.coordChiffre.index(self.selectedCase[1])][self.coordLettre.index(self.selectedCase[0].lower())] = None 
-                	print(f"Moved {self.selectedCase} to {self.coordLettre[colonne].upper()}{self.coordChiffre[ligne]}")
-                	
-                	self.coupsJouables = []
-                	self.selectedCase = None
-                	self.tour = "B" if self.tour == "W" else "W"
-                	#self.retournePlateau()
-                	self.updateDisplay()
-                	
+                    
                 else : # si on clique sur n'importe quel autre endroit
-                	self.coupsJouables = []
-                	self.selectedCase = None
-                	self.updateDisplay()
-                	
-                	
-        
-            
                 
+                    # on réinitialise les attributs de sélection et on met à jour l'affichage.
+                    self.coupsJouables = []
+                    self.selectedCase = None
+                    self.updateDisplay()
+                    
 
-                
-            
-                
-            
-            
-        #implémentation sous forme de boutons :
-        #for l,line in enumerate(self.plateau) : 
-        #    for c,case in enumerate(line) :
-        #        textButton = case.valeur if case is not None else " "
-        #        button=tk.Button(text=textButton, width = "2", height = "2", bg=color) 
-        #        button.grid(row = l, column = c)
-        #        color = toggle(color)
-        #    color = toggle(color)
         
-        #implémentation sous forme de canvas
-        label = tk.Label(self,text="ici on peut mettre du texte hihi")
+        #implémentation du canvas
+        label = tk.Label(self,text="ici on peut mettre du texte hihi") # debug
         label.grid(row=0, column=0)
-        label = tk.Label(self,text="Texte sur le côté")
+        label = tk.Label(self,text="Texte sur le côté") # debug
         label.grid(row=0, column=1)
-        labelFrame = tk.LabelFrame(self,text="Debug Buttons", width="50")
+        labelFrame = tk.LabelFrame(self,text="Debug Buttons", width="50") # debug
         labelFrame.grid(row=1, column=1)
-        button1 = tk.Button(labelFrame, text="Flip the board", command = self.retournePlateau)
+        button1 = tk.Button(labelFrame, text="Flip the board", command = self.retournePlateau) # debug
         button1.pack()
-        button2 = tk.Button(labelFrame, text="Play sound", command = lambda : playMoveSound())
+        button2 = tk.Button(labelFrame, text="Play sound", command = lambda : playMoveSound()) # debug
         button2.pack()
         
         #on doit ensuite créer 64 carrés d'une couleur différente, sous forme
@@ -249,12 +299,11 @@ class Board(tk.Tk):
                 
                 sprPiece = f"{case.valeur}{case.couleur}" if case is not None else None
                 if sprPiece is not None :
-                    self.canvas.create_image((c*100+50,l*100+50), image=self.sprites[sprPiece]) # wtf pourquoi elles s'affichent pas ?
+                    # on affiche les sprites correspondant aux pions
+                    self.canvas.create_image((c*100+50,l*100+50), image=self.sprites[sprPiece])
                     self.canvas.image=self.sprites[sprPiece]
-                    #print(self.sprites[sprPiece])
-                    #print(sprPiece)
                 
-                color = toggle(color)
+                color = toggle(color) # et on inverse les couleurs pour avoir des carreaux dont les couleurs alternent
             color = toggle(color)
             
         for position in self.coupsJouables : # affichage d'un point bleu pour les points jouables
@@ -271,22 +320,27 @@ class Board(tk.Tk):
             
             
             
-            
+        # affichage des légendes sur les côtés du plateau.
         for i, coords in enumerate(self.coordLettre):
             self.canvas.create_text(i*100+9, 812 , text=coords,font="Times 15 italic bold")
         for i, coords in enumerate(self.coordChiffre):
             self.canvas.create_text(812,i*100+10, text=coords, font="Times 15 italic bold")
         
+        # on associe le canvas à la fonction clickEvent quand on clique dessus en le traitant comme un bouton.
         self.canvas.bind("<Button-1>", clickEvent)
+        # on attache le canvas à la fenêtre
         self.canvas.grid(row=1, column=0)
         
-        
+        # frame de débug
         labelFrame = tk.LabelFrame(self, text="Board string representation")
         labelFrame.grid(row=2, column=0)
+        # affiche la représentation string du plateau actuel
         label = tk.Label(labelFrame, text=self.toString(), width = 50, wraplength=500, padx=50, pady=10)
         label.pack()
+        # affiche la dernière actualisation du plateau
         label = tk.Label(labelFrame, text=f"updated at {datetime.datetime.now()}")
         label.pack()
+        # affiche la couleur du joueur dont c'est le tour
         label = tk.Label(labelFrame, text=f"{'White' if self.tour == 'W' else 'Black'} have to play.")
         label.pack()
         
@@ -297,6 +351,11 @@ class Board(tk.Tk):
         
     
     def __repr__(self):
+        """
+        Cette fonction est utilisée UNIQUEMENT si tkinter n'est pas attaché.
+        En effet, comme l'objet Board est un sous-objet d'une fenêtre Tkinter,
+        il est impossible de le print.
+        """
     
         stringBoard = ""
         for ligne in self.plateau:
@@ -316,9 +375,6 @@ class Pion(object):
     def __init__(self, valeur, couleur):
         self.valeur = valeur
         self.couleur = couleur
-    def promote(self, NouvelleValeur):
-        if NouvelleValeur.upper() in ["P","T","C","F","Q"]:
-            pass
 
 
 
