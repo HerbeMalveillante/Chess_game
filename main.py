@@ -380,20 +380,26 @@ class Pion(object):
 
 class Noeud():
     """
-    P = Pion
-    T = Tour
-    C = Cavalier
-    F = Fou
-    Q = Reine
-    K = Roi
+    Utiliser par l'objet ArbreDeplacement afin de creer son arbre
+        
+        Initialise un objet Noeud, qui permet de creer un arbre, avec 1 ou plusieurs enfants.
+            -positionPion : recuperer la position sur le plateau du pion choisit
+            -branches : definir ses enfants sous forme de liste de liste (vide au depart et rempli par les differentes methodes)
+        
     """
     def __init__(self, positionDuPion):
-            self.positionPion=positionDuPion
-            self.branches=[]
+        
+        self.positionPion=positionDuPion
+        self.branches=[]
             
             
             
-    def nord(self):  
+    def nord(self):
+        """
+        Ajoute dans l'attribut branches, toute les position possible dans un plateau vide.
+            
+            Celle ci sert a creer des fils vers le haut du plateau en fonction de la position de notre pion.
+        """
         if int(self.positionPion[1]) <8:
             self.branches.append(
                 Noeud(self.positionPion[0]+str(int(self.positionPion[1])+1))
@@ -401,8 +407,12 @@ class Noeud():
             self.branches[-1].nord()
         
     def sud(self):
-
-       if int(self.positionPion[1]) > 1:
+        """
+        Ajoute dans l'attribut branches, toute les position possible dans un plateau vide.
+            
+            Celle ci sert a creer des fils vers le bas du plateau en fonction de la position de notre pion.
+        """
+        if int(self.positionPion[1]) > 1:
             self.branches.append(
                 Noeud(self.positionPion[0]+str(int(self.positionPion[1])-1))
                 )
@@ -410,7 +420,11 @@ class Noeud():
     
     
     def est(self):
-
+        """
+        Ajoute dans l'attribut branches, toute les position possible dans un plateau vide.
+            
+            Celle ci sert a creer des fils vers la doite du plateau en fonction de la position de notre pion.
+        """
         if ord(self.positionPion[0].lower()) < 104 :
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())+1).upper()+self.positionPion[1])
@@ -418,7 +432,11 @@ class Noeud():
             self.branches[-1].est()
     
     def ouest(self):
-
+        """
+        Ajoute dans l'attribut branches, toute les position possible dans un plateau vide.
+            
+            Celle ci sert a creer des fils vers la gauche du plateau en fonction de la position de notre pion.
+        """
         if ord(self.positionPion[0].lower()) > 97:
             self.branches.append( 
                 Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+self.positionPion[1])
@@ -427,6 +445,11 @@ class Noeud():
             
     
     def nord_est(self):
+        """
+        Ajoute dans l'attribut branches, toute les position possible dans un plateau vide.
+            
+            Celle ci sert a creer des fils vers la diagonale haut-droite du plateau en fonction de la position de notre pion.
+        """
         if int(self.positionPion[1]) <8 and ord(self.positionPion[0].lower()) < 104:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())+1).upper()+str(int(self.positionPion[1])+1))
@@ -435,6 +458,11 @@ class Noeud():
         
         
     def nord_ouest(self):
+        """
+        Ajoute dans l'attribut branches, toute les position possible dans un plateau vide.
+            
+            Celle ci sert a creer des fils vers la diagonale haut-gauche du plateau en fonction de la position de notre pion.
+        """
         if int(self.positionPion[1]) < 8 and ord(self.positionPion[0].lower()) > 97:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+str(int(self.positionPion[1])+1))
@@ -442,6 +470,11 @@ class Noeud():
             self.branches[-1].nord_ouest()
     
     def sud_est(self):
+        """
+        Ajoute dans l'attribut branches, toute les position possible dans un plateau vide.
+            
+            Celle ci sert a creer des fils vers la diagonale bas-droite du plateau en fonction de la position de notre pion.
+        """
         if int(self.positionPion[1]) >1 and ord(self.positionPion[0].lower()) < 104:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())+1).upper() + str(int(self.positionPion[1])-1))
@@ -449,6 +482,12 @@ class Noeud():
             self.branches[-1].sud_est()
     
     def sud_ouest(self):
+        """
+        Ajoute dans l'attribut branches, toute les position possible dans un plateau vide.
+            
+            Celle ci sert a creer des fils vers la diagonale bas-gauche du plateau en fonction de la position de notre pion.
+        """
+        
         if int(self.positionPion[1]) >1 and ord(self.positionPion[0].lower()) > 97:
             self.branches.append(
                 Noeud(chr(ord(self.positionPion[0].lower())-1).upper()+str(int(self.positionPion[1])-1))
@@ -456,6 +495,11 @@ class Noeud():
             self.branches[-1].sud_ouest()
     
     def roi(self):
+        """
+        Cette fonction sert a creer les deplacement d'un roi dans toute les directions possibles.
+            
+            Clairement different des autres fonctions nord(), sud()..., du au fait que le roi peut se deplacer d'une seul case autour de lui
+        """
         #nord
         if int(self.positionPion[1]) <8:
             self.branches.append(
@@ -498,6 +542,14 @@ class Noeud():
                 )     
             
     def pion(self,couleur,deuxCase=False):
+        """
+        De meme que le roi, cette fonction creer le deplacement d'un pion.
+            - La fonction prend en compte si le pion peut avancer de 2 case si il est dans la position initiale.
+            
+            - La fonction demande la couleur du pion, où la couleur est soit blanc ( type = int) remplace par un 1 ou 0 pour une couleur noir avec l'attribut: couleur (type = int)
+            
+            - La fonction demande egalement si le pion peut avancer de 2 cases avec l'attribut: deuxCase (type = bool, de base False)
+        """
         if couleur == 1:
             
             if deuxCase==True:
@@ -558,7 +610,9 @@ class Noeud():
                 
                 
     def cavalier(self):
-        
+        """
+        Creer tout les deplacements d'un cavalier dans un plateau vide selon la position du pion
+        """
         positionInitialeX=int(self.positionPion[1])
         positionInitialeY=ord(self.positionPion[0].lower())
         #haut haut droite et bas bas droite
@@ -606,8 +660,35 @@ class ArbreDeplacement():
     """
     la classe arbre creer un arbre de deplacement d'un pion, sans verifiquation au niveau du plateau
     pour obtenir l'arbre sous forme de liste:
-        creer l'arbre => ArbreDeplacement('case', 'valeur pion')
-        demander via le pion => pion.DeplacementPion()
+        
+        ->creer l'arbre : ArbreDeplacement('case', 'valeur pion', 'plateau')
+            -->case : position du pion demander
+                    valeurPion : de quel type est le pion
+                        -Roi
+                        -Reine
+                        -Cavalier
+                        -Fou
+                        -Tour
+                        -Pion
+            -->plateau :  plateau actuel sous forme de liste
+            
+        ->demander via le pion dans le plateau,  => pion.DeplacementPion()
+        
+    =>Les attributs:
+        
+        -racine : creer un objet Noeud avec la position du pion
+        
+        -positionPion : prend la position du pion sur le plateau
+        
+        -valeurPion : prend la valeur du pion (Roi, Reine, ...)
+        
+        -plateau : prend la liste definisant le plateau (soit l'attribut plateau de la classe Board)
+        
+        -coordLettre : prend de l'objet Board, l'attribut coordLettre pour definir les coordonnées selon le sens du plateau
+        
+        -coordchiffre : prend de l'objet Board, l'attribut coordChiffre pour definir les coordonnées selon le sens du plateau
+        
+        
     """
     def __init__(self, positionPion, valeurPion, board=None):
         self.racine=Noeud(positionPion)
@@ -616,24 +697,19 @@ class ArbreDeplacement():
         self.plateau=board.plateau
         self.coordLettre= board.coordLettre
         self.coordChiffre= board.coordChiffre
-        self.constructionArbre()
+        
+        self.constructionArbre() #lance la methode constructionArbre() pour creer la liste des coups possibles
 
         
     def constructionArbre(self):
         """
-        P = Pion
-        T = Tour
-        C = Cavalier
-        F = Fou
-        Q = Reine
-        R = Roi
+        Cette fonction permet de creer selon le type de pion ( Roi, Reine, ...) toute la liste des coups possibles
         """
         
         if self.valeurPion == "P":
             xPion= self.coordLettre.index(self.position[0].lower())
             yPion= self.coordChiffre.index(self.position[1])
             PionBase= self.plateau[yPion][xPion]
-            print(yPion)
             if PionBase.couleur=='W':
                 
                 if self.position[1] == "2":
@@ -641,28 +717,32 @@ class ArbreDeplacement():
                 else:
                     self.racine.pion(1)
             else:
-                print(self.position)
+    
                 if self.position[1]== "7":
                     self.racine.pion(0, True)
                 else:
                     self.racine.pion(0)
                 
         if self.valeurPion == "T":
+            
             self.racine.nord()
             self.racine.sud()
             self.racine.est()
             self.racine.ouest()
         
         if self.valeurPion == "C":
+            
             self.racine.cavalier()
         
         if self.valeurPion == "F":
+            
             self.racine.nord_est()
             self.racine.nord_ouest()
             self.racine.sud_est()
             self.racine.sud_ouest()
         
         if self.valeurPion == "Q":
+            
             self.racine.nord()
             self.racine.sud()
             self.racine.est()
@@ -674,9 +754,9 @@ class ArbreDeplacement():
             
         
         if self.valeurPion == "R":
-            print("c'est un roi")
+            
             self.racine.roi()
-            print(self.racine.branches)
+            
         
         
     
@@ -686,9 +766,23 @@ class ArbreDeplacement():
         
     def DeplacementPion(self):
         """
-        renvoi la liste de toute les case posible du pion
+        Renvoi la liste de toute les case possible du pion
+        Utilise parcours() pour les pion simples
+        Utilise testPion 
         """
         def parcours(noeud, lst, PionBase):
+            """
+            Permet de retourner les deplacements sous forme de liste simple des pions :
+                -Roi
+                
+                -Reine
+                
+                -Fou
+                
+                -Cavalier
+                
+                -Tour
+            """
             
             case=noeud.positionPion.lower()
             xPlateau= self.coordLettre.index(case[0])
@@ -713,7 +807,10 @@ class ArbreDeplacement():
         
         
         
-        def testPion(lst,couleur, PionBase, plateau):
+        def parcoursPion(lst,couleur, PionBase, plateau):
+            """
+            Permet, si le pion est un pion, de retourner sa propre liste
+            """
             liste=[]
             
             if couleur == 1:
@@ -753,8 +850,10 @@ class ArbreDeplacement():
                             if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())] is not None:
                                 if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())].couleur != PionBase.couleur:
                                     liste.append(lst[i])
+                
                 if len(liste) >1:
                     if liste[0][0] == liste[1][0]:
+
                         if int(liste[0][1])==int(liste[1][1])+1:
                             if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
                                 liste.pop(1)
@@ -773,9 +872,9 @@ class ArbreDeplacement():
         
         if self.valeurPion == "P":
             if PionBase.couleur == "W":
-                lst=testPion(lst,1, PionBase, self.plateau)
+                lst=parcoursPion(lst,1, PionBase, self.plateau)
             else:
-                lst=testPion(lst,0, PionBase, self.plateau)
+                lst=parcoursPion(lst,0, PionBase, self.plateau)
             
         return lst    
         
