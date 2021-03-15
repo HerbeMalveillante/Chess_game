@@ -794,28 +794,7 @@ class ArbreDeplacement():
 p = Board()
 
 arbrePiece = Noeud("d1")
-#p.loadFromString(p.toString())
 print('--------------')
 
 p.mainloop()
 #p.updateDisplay()
-
-
-
-
-#plateau = liste de liste
-
-#coordChiffre = ['1','2',....,'8']
-#coordLettre = ['a','b',....,'h']
-
-
-#H1 -> 1
-
-#index de 1 dans coordChiffre -> ici c'est zéro
-
-#x = coordChiffre.index('1')
-#y = coordLettre.index('H')
-
-#x et y 
-
-#pièce = plateau[x][y] -> objet Pion ou None
