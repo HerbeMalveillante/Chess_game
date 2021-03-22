@@ -902,6 +902,33 @@ class ArbreDeplacement():
         return lst
 
 
+
+        def echec(self):
+            #definir la couleur de notre pion
+            
+            xPion = self.coordLettre.index(self.position[0].lower())
+            yPion = self.coordChiffre.index(self.position[1])
+            PionCouleur = self.plateau[yPion][xPion].couleur
+            i = 0
+            j = 0
+            for ligne in self.plateau:
+                for pion in ligne:
+                    if pion.valeur == "R":
+                        if pion.couleur != PionCouleur:
+                            roi = pion
+                            
+                            break
+                    j += 1
+                j = 0
+                i += 1
+            #on construit l'arbre du roi
+            roi_Position = 0
+            
+            
+            for case in self.racine.branches:
+                pass
+
+
 p = Board()
 
 arbrePiece = Noeud("d1")
