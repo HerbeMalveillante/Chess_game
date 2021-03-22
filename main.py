@@ -4,7 +4,6 @@ import random
 from PIL import Image, ImageTk
 import numpy as np
 import pygame
-import random
 import datetime
 
 
@@ -208,6 +207,29 @@ class Board(tk.Tk):
             """
             sounds = [sound1, sound2]
             return pygame.mixer.Sound.play(random.choice(sounds))
+        
+        def openPromotionWindow(ligne, colonne):
+            
+            
+            def promote(toplevel, valeur):
+                print(f"promoted to {valeur}")
+                self.plateau[ligne][colonne].valeur = valeur
+                toplevel.destroy()
+                self.updateDisplay()
+            
+            newWindow = tk.Toplevel(self)
+            newWindow.title("Choisissez la pièce en laquelle transformer votre pion")
+            newWindow.geometry("200x200")
+
+            couleur = self.plateau[ligne][colonne].couleur
+            
+            
+
+            tk.Button(newWindow, text="tour", command = lambda : promote(newWindow, "T")).pack()
+            tk.Button(newWindow, text="cavalier", command = lambda : promote(newWindow, "C")).pack()
+            tk.Button(newWindow, text="fou", command = lambda : promote(newWindow, "F")).pack()
+            tk.Button(newWindow, text="reine", command = lambda : promote(newWindow, "Q")).pack()
+        
 
         def clickEvent(event):
             """
@@ -251,7 +273,7 @@ class Board(tk.Tk):
                 elif f"{self.coordLettre[colonne]}{self.coordChiffre[ligne]}".upper() in self.coupsJouables:
 
                     playMoveSound()  # on joue un son
-
+                    
                     # on copie la pièce qui se déplace à sa nouvelle position, prenant potentiellement la place d'une pièce mangée.
                     self.plateau[ligne][colonne] = self.plateau[self.coordChiffre.index(
                         self.selectedCase[1])][self.coordLettre.index(self.selectedCase[0].lower())]
@@ -260,7 +282,24 @@ class Board(tk.Tk):
                         self.selectedCase[0].lower())] = None
                     print(
                         f"Moved {self.selectedCase} to {self.coordLettre[colonne].upper()}{self.coordChiffre[ligne]}")
-
+                    
+                    
+                    # éventualité de promotion du pion :
+                    print(self.coordChiffre[0])
+                    print(ligne)
+                    if self.plateau[ligne][colonne].valeur == "P":
+                        if ligne == 0 or ligne == 7: 
+                            print("promotion possible !")
+                            
+                            openPromotionWindow(ligne, colonne)
+                            
+                            
+                    
+                    
+                    
+                    
+                    
+                    
                     # le tour est terminé, on réinitialise les attributs de sélection
                     self.coupsJouables = []
                     self.selectedCase = None
@@ -902,33 +941,6 @@ class ArbreDeplacement():
         return lst
 
 
-
-        def echec(self):
-            #definir la couleur de notre pion
-            
-            xPion = self.coordLettre.index(self.position[0].lower())
-            yPion = self.coordChiffre.index(self.position[1])
-            PionCouleur = self.plateau[yPion][xPion].couleur
-            i = 0
-            j = 0
-            for ligne in self.plateau:
-                for pion in ligne:
-                    if pion.valeur == "R":
-                        if pion.couleur != PionCouleur:
-                            roi = pion
-                            
-                            break
-                    j += 1
-                j = 0
-                i += 1
-            #on construit l'arbre du roi
-            roi_Position = 0
-            
-            
-            for case in self.racine.branches:
-                pass
-
-
 p = Board()
 
 arbrePiece = Noeud("d1")
@@ -936,3 +948,4 @@ print('--------------')
 
 p.mainloop()
 # p.updateDisplay()
+
