@@ -34,7 +34,7 @@ class Board(tk.Tk):
     """
     Initialise une fenêtre Tkinter, et définit
     des attributs publics utilisés et potentiellement
-    modifiés par d'autres programmes : 
+    modifiés par d'autres programmes :
 
     l'attribut 'tour' contient la lettre de la couleur du joueur qui doit jouer ('W' ou 'B'), 'W' par défaut
     l'attribut 'selectedCase' contient la case actuellement sélectionnée ou un None, utile pour connaître
@@ -67,9 +67,6 @@ class Board(tk.Tk):
     """
 
     def __init__(self, *args, **kwargs):
-        """
-        TODO
-        """
 
         # initialisation de la fenêtre de jeu
         tk.Tk.__init__(self, *args, **kwargs)
@@ -128,10 +125,10 @@ class Board(tk.Tk):
         # TODO ajouter la variable "tour" afin de communiquer la personne qui est censé jouer au prochain tour.
 
         sE = ""
-        for l in range(len(self.plateau)):
-            for c in range(len(self.plateau[l])):
-                if self.plateau[l][c] is not None:
-                    sE += f"{self.coordLettre[c]}{self.coordChiffre[l]}{self.plateau[l][c].valeur}{self.plateau[l][c].couleur}"
+        for ligne in range(len(self.plateau)):
+            for colonne in range(len(self.plateau[ligne])):
+                if self.plateau[ligne][colonne] is not None:
+                    sE += f"{self.coordLettre[colonne]}{self.coordChiffre[ligne]}{self.plateau[ligne][colonne].valeur}{self.plateau[ligne][colonne].couleur}"
         return sE
 
     def loadFromString(self, string):
@@ -207,29 +204,42 @@ class Board(tk.Tk):
             """
             sounds = [sound1, sound2]
             return pygame.mixer.Sound.play(random.choice(sounds))
-        
+
         def openPromotionWindow(ligne, colonne):
-            
-            
+            """
+            ouvre une fenêtre invitant l'utilisateur à choisir la pièce en laquelle transformer son pion promu.
+            modifie la valeur de la pièce en place et ferme la fenêtre. Si la fenêtre est fermée, le pion n'est pas promu.
+            la partie ne peut pas continuer tant que la fenètre n'est pas fermée.
+            """
+
             def promote(toplevel, valeur):
                 print(f"promoted to {valeur}")
                 self.plateau[ligne][colonne].valeur = valeur
                 toplevel.destroy()
                 self.updateDisplay()
-            
+
             newWindow = tk.Toplevel(self)
-            newWindow.title("Choisissez la pièce en laquelle transformer votre pion")
-            newWindow.geometry("200x200")
+            newWindow.title(
+                "Choisissez la pièce en laquelle transformer votre pion")
+            # newWindow.geometry("200x200")
+
+            # grab_set permet de forcer le topLevel en premier plan : ainsi, on ne peut continuer à jouer avec cette fenêtre ouverte.
+            newWindow.grab_set()
 
             couleur = self.plateau[ligne][colonne].couleur
-            
-            
 
-            tk.Button(newWindow, text="tour", command = lambda : promote(newWindow, "T")).pack()
-            tk.Button(newWindow, text="cavalier", command = lambda : promote(newWindow, "C")).pack()
-            tk.Button(newWindow, text="fou", command = lambda : promote(newWindow, "F")).pack()
-            tk.Button(newWindow, text="reine", command = lambda : promote(newWindow, "Q")).pack()
-        
+            tk.Button(newWindow, text="tour",
+                      command=lambda: promote(newWindow, "T"),
+                      image=self.sprites[f"T{couleur}"]).grid(row=0, column=0)
+            tk.Button(newWindow, text="cavalier",
+                      command=lambda: promote(newWindow, "C"),
+                      image=self.sprites[f"C{couleur}"]).grid(row=0, column=1)
+            tk.Button(newWindow, text="fou",P
+                      command=lambda: promote(newWindow, "F"),
+                      image=self.sprites[f"F{couleur}"]).grid(row=0, column=2)
+            tk.Button(newWindow, text="reine",
+                      command=lambda: promote(newWindow, "Q"),
+                      image=self.sprites[f"Q{couleur}"]).grid(row=0, column=3)
 
         def clickEvent(event):
             """
@@ -273,7 +283,7 @@ class Board(tk.Tk):
                 elif f"{self.coordLettre[colonne]}{self.coordChiffre[ligne]}".upper() in self.coupsJouables:
 
                     playMoveSound()  # on joue un son
-                    
+
                     # on copie la pièce qui se déplace à sa nouvelle position, prenant potentiellement la place d'une pièce mangée.
                     self.plateau[ligne][colonne] = self.plateau[self.coordChiffre.index(
                         self.selectedCase[1])][self.coordLettre.index(self.selectedCase[0].lower())]
@@ -282,24 +292,16 @@ class Board(tk.Tk):
                         self.selectedCase[0].lower())] = None
                     print(
                         f"Moved {self.selectedCase} to {self.coordLettre[colonne].upper()}{self.coordChiffre[ligne]}")
-                    
-                    
+
                     # éventualité de promotion du pion :
                     print(self.coordChiffre[0])
                     print(ligne)
                     if self.plateau[ligne][colonne].valeur == "P":
-                        if ligne == 0 or ligne == 7: 
+                        if ligne == 0 or ligne == 7:
                             print("promotion possible !")
-                            
+
                             openPromotionWindow(ligne, colonne)
-                            
-                            
-                    
-                    
-                    
-                    
-                    
-                    
+
                     # le tour est terminé, on réinitialise les attributs de sélection
                     self.coupsJouables = []
                     self.selectedCase = None
@@ -948,4 +950,3 @@ print('--------------')
 
 p.mainloop()
 # p.updateDisplay()
-
