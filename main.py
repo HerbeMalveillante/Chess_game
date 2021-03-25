@@ -687,7 +687,7 @@ class Noeud():
         positionInitialeY = ord(self.positionPion[0].lower())
         # haut haut droite et bas bas droite
         if positionInitialeY + 1 <= 104:
-            if positionInitialeX + 2 < 8:
+            if positionInitialeX + 2 <= 8:
                 self.branches.append(
                     Noeud(chr(positionInitialeY + 1).upper() +
                           str(positionInitialeX + 2))
@@ -699,7 +699,7 @@ class Noeud():
                 )
         # haut haut gauche et bas bas gauche
         if positionInitialeY - 1 >= 97:
-            if positionInitialeX + 2 < 8:
+            if positionInitialeX + 2 <= 8:
                 self.branches.append(
                     Noeud(chr(positionInitialeY - 1).upper() +
                           str(positionInitialeX + 2))
@@ -710,7 +710,7 @@ class Noeud():
                           str(positionInitialeX - 2))
                 )
         # haut droite droite et bas droite droite
-        if positionInitialeX + 1 < 8:
+        if positionInitialeX + 1 <= 8:
             if positionInitialeY + 2 <= 104:
                 self.branches.append(
                     Noeud(chr(positionInitialeY + 2).upper() +
@@ -900,6 +900,9 @@ class ArbreDeplacement():
                         if int(liste[0][1]) == int(liste[1][1]) - 1:
                             if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
                                 liste.pop(1)
+                
+                
+                        
                 return liste
 
             else:
@@ -924,6 +927,8 @@ class ArbreDeplacement():
                         if int(liste[0][1]) == int(liste[1][1]) + 1:
                             if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
                                 liste.pop(1)
+
+                
                 return liste
 
         xPion = self.coordLettre.index(self.position[0].lower())
@@ -937,11 +942,18 @@ class ArbreDeplacement():
         if self.valeurPion == "P":
             if PionBase.couleur == "W":
                 lst = parcoursPion(lst, 1, PionBase, self.plateau)
+                if len(lst)==1:
+                    if self.plateau[self.coordChiffre.index(lst[0][1])+1][self.coordLettre.index(lst[0][0].lower())] is not None:
+                        lst.pop()
             else:
                 lst = parcoursPion(lst, 0, PionBase, self.plateau)
+                if len(lst)==1:
+                    if self.plateau[self.coordChiffre.index(lst[0][1])-1][self.coordLettre.index(lst[0][0].lower())] is not None:
+                        lst.pop()
+            
+                
 
         return lst
-
 
 p = Board()
 
