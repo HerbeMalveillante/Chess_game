@@ -941,16 +941,12 @@ class ArbreDeplacement():
             if PionBase.couleur == "W":
                 lst = parcoursPion(lst, 1, PionBase, self.plateau)
                 if len(lst)==1:
-                    print("test len =1")
                     if self.plateau[self.coordChiffre.index(lst[0][1])+1][self.coordLettre.index(lst[0][0].lower())] is not None:
-                        print("test si not none")
                         lst.pop()
             else:
                 lst = parcoursPion(lst, 0, PionBase, self.plateau)
                 if len(lst)==1:
-                    print("test len =1")
                     if self.plateau[self.coordChiffre.index(lst[0][1])-1][self.coordLettre.index(lst[0][0].lower())] is not None:
-                        print("test si not none")
                         lst.pop()
             
                 
