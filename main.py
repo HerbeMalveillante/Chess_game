@@ -5,6 +5,8 @@ from PIL import Image, ImageTk
 import numpy as np
 import pygame
 import datetime
+import socket
+import re
 
 
 # on prépare pygame pour jouer les sons :
@@ -28,6 +30,72 @@ sound2 = pygame.mixer.Sound("sounds/move7.ogg")
 # on sauvegarde toutes ces possibilités dans un nouveau plateau
 # et on fait le test d'échec sur chacun de ces plateaux
 # si y'a aucun plateau qui n'est pas en échec alors c'est échec et mat.
+
+
+class Game(tk.Tk):
+    """
+    Menu principal du jeu : initialise une fenêtre tkinter
+    permettant de lancer le jeu avec les bons paramètres :
+
+    singleplayer : lance une partie solo
+    multiplayer_hosting : héberge un serveur socketio et se définit comme serveur
+    multiplayer_hosted : se connecte à un serveur préexistant.
+    """
+
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+        self.title("NSICHESS XTREME 2 DELUXE PREMIUM [CRACK] - LAUNCHER")
+
+        # on récupère des informations sur le nom et l'ip de l'ordinateur
+        # qui nous serviront pour plus tard.
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+
+        # frame global qui contient toutes les options
+        frameMode = tk.LabelFrame(
+            text="Choisissez votre mode de jeu", padx=50, pady=20)
+        frameMode.pack()
+        # frame pour le singleplayer
+        frameSinglePlayer = tk.LabelFrame(
+            frameMode, text="Multijoueur local", padx=25, pady=20)
+        frameSinglePlayer.grid(row=0, column=0)
+        tk.Button(frameSinglePlayer, text="Multijoueur local",
+                  command=self.launchSinglePlayer).pack()
+        # frame pour se connecter à un serveur
+        frameHosted = tk.LabelFrame(
+            frameMode, text="Se connecter à une partie en ligne", padx=25, pady=20)
+        frameHosted.grid(row=0, column=1)
+        # champ pour entrer l'ip
+        ip = tk.StringVar()
+        ip.set(f"entrez l'ip ici")
+        entree = tk.Entry(frameHosted, textvariable=ip, width=30).pack()
+        tk.Button(frameHosted, text="Connexion",
+                  command=self.launchHosted).pack()
+        # frame pour héberger un serveur
+        frameHosting = tk.LabelFrame(
+            frameMode, text="Héberger une partie en ligne", padx=25, pady=20)
+        frameHosting.grid(row=0, column=2)
+        # champ pour entrer le port
+        port = tk.StringVar()
+        port.set(f"entrez le port ici (>1023)")
+        entree = tk.Entry(frameHosting, textvariable=port, width=30).pack()
+        tk.Button(frameHosting, text="Héberger une partie en ligne",
+                  command=self.launchHosting).pack()
+
+    def launchSinglePlayer(self):
+        self.destroy()
+        p = Board("singleplayer")
+        p.mainloop()
+
+    def launchHosted(self):
+        self.destroy()
+        p = Board("multiplayer_hosted")
+        p.mainloop()
+
+    def launchHosting(self):
+        self.destroy()
+        p = Board("multiplayer_hosting")
+        p.mainloop()
 
 
 class Board(tk.Tk):
@@ -66,11 +134,13 @@ class Board(tk.Tk):
     modifié par la méthode 'updateDisplay'.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, gamemode, *args, **kwargs):
 
         # initialisation de la fenêtre de jeu
         tk.Tk.__init__(self, *args, **kwargs)
         self.title("NSICHESS XTREME 2 DELUXE PREMIUM [CRACK]")
+
+        self.gamemode = gamemode
 
         self.tour = "W"  # les blancs commencent
         self.selectedCase = None
@@ -388,17 +458,15 @@ class Board(tk.Tk):
         labelFrame = tk.LabelFrame(self, text="Board string representation")
         labelFrame.grid(row=2, column=0)
         # affiche la représentation string du plateau actuel
-        label = tk.Label(labelFrame, text=self.toString(),
-                         width=50, wraplength=500, padx=50, pady=10)
-        label.pack()
+        tk.Label(labelFrame, text=self.toString(),
+                 width=50, wraplength=500, padx=50, pady=10).pack()
         # affiche la dernière actualisation du plateau
-        label = tk.Label(
-            labelFrame, text=f"updated at {datetime.datetime.now()}")
-        label.pack()
+        tk.Label(
+            labelFrame, text=f"updated at {datetime.datetime.now()}").pack()
         # affiche la couleur du joueur dont c'est le tour
-        label = tk.Label(
-            labelFrame, text=f"{'White' if self.tour == 'W' else 'Black'} have to play.")
-        label.pack()
+        tk.Label(
+            labelFrame, text=f"{'White' if self.tour == 'W' else 'Black'} have to play.").pack()
+        tk.Label(labelFrame, text=f"Gamemode : {self.gamemode}").pack()
 
     def __repr__(self):
         """
@@ -951,10 +1019,9 @@ class ArbreDeplacement():
         return lst
 
 
-p = Board()
+g = Game()
 
-arbrePiece = Noeud("d1")
 print('--------------')
 
-p.mainloop()
+g.mainloop()
 # p.updateDisplay()
