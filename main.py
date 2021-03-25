@@ -234,7 +234,7 @@ class Board(tk.Tk):
             tk.Button(newWindow, text="cavalier",
                       command=lambda: promote(newWindow, "C"),
                       image=self.sprites[f"C{couleur}"]).grid(row=0, column=1)
-            tk.Button(newWindow, text="fou", P
+            tk.Button(newWindow, text="fou",
                       command=lambda: promote(newWindow, "F"),
                       image=self.sprites[f"F{couleur}"]).grid(row=0, column=2)
             tk.Button(newWindow, text="reine",
