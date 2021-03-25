@@ -234,7 +234,7 @@ class Board(tk.Tk):
             tk.Button(newWindow, text="cavalier",
                       command=lambda: promote(newWindow, "C"),
                       image=self.sprites[f"C{couleur}"]).grid(row=0, column=1)
-            tk.Button(newWindow, text="fou",P
+            tk.Button(newWindow, text="fou", P
                       command=lambda: promote(newWindow, "F"),
                       image=self.sprites[f"F{couleur}"]).grid(row=0, column=2)
             tk.Button(newWindow, text="reine",
@@ -900,9 +900,7 @@ class ArbreDeplacement():
                         if int(liste[0][1]) == int(liste[1][1]) - 1:
                             if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
                                 liste.pop(1)
-                
-                
-                        
+
                 return liste
 
             else:
@@ -928,7 +926,6 @@ class ArbreDeplacement():
                             if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
                                 liste.pop(1)
 
-                
                 return liste
 
         xPion = self.coordLettre.index(self.position[0].lower())
@@ -942,18 +939,17 @@ class ArbreDeplacement():
         if self.valeurPion == "P":
             if PionBase.couleur == "W":
                 lst = parcoursPion(lst, 1, PionBase, self.plateau)
-                if len(lst)==1:
-                    if self.plateau[self.coordChiffre.index(lst[0][1])+1][self.coordLettre.index(lst[0][0].lower())] is not None:
+                if len(lst) == 1:
+                    if self.plateau[self.coordChiffre.index(lst[0][1]) + 1][self.coordLettre.index(lst[0][0].lower())] is not None:
                         lst.pop()
             else:
                 lst = parcoursPion(lst, 0, PionBase, self.plateau)
-                if len(lst)==1:
-                    if self.plateau[self.coordChiffre.index(lst[0][1])-1][self.coordLettre.index(lst[0][0].lower())] is not None:
+                if len(lst) == 1:
+                    if self.plateau[self.coordChiffre.index(lst[0][1]) - 1][self.coordLettre.index(lst[0][0].lower())] is not None:
                         lst.pop()
-            
-                
 
         return lst
+
 
 p = Board()
 
