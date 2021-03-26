@@ -46,6 +46,12 @@ class Game(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title("NSICHESS XTREME 2 DELUXE PREMIUM [CRACK] - LAUNCHER")
 
+        # ajout du logo
+        path = "sprites/logo.png"
+        self.imgtk = ImageTk.PhotoImage(Image.open(path))
+        label = tk.Label(image=self.imgtk)
+        label.grid(row=0, column=0)
+
         # on récupère des informations sur le nom et l'ip de l'ordinateur
         # qui nous serviront pour plus tard.
         hostname = socket.gethostname()
@@ -54,7 +60,7 @@ class Game(tk.Tk):
         # frame global qui contient toutes les options
         frameMode = tk.LabelFrame(
             text="Choisissez votre mode de jeu", padx=50, pady=20)
-        frameMode.pack()
+        frameMode.grid(row=1, column=0)
         # frame pour le singleplayer
         frameSinglePlayer = tk.LabelFrame(
             frameMode, text="Multijoueur local", padx=25, pady=20)
@@ -77,10 +83,14 @@ class Game(tk.Tk):
         frameHosting.grid(row=0, column=2)
         # champ pour entrer le port
         port = tk.StringVar()
-        port.set(f"entrez le port ici (>1023)")
+        port.set(f"entrez le port ici (défaut : 4200)")
         entree = tk.Entry(frameHosting, textvariable=port, width=30).pack()
         tk.Button(frameHosting, text="Héberger une partie en ligne",
                   command=self.launchHosting).pack()
+
+        # indication de l'ip
+        tk.Label(frameMode, text=f"Identifiant : {hostname}").grid(row=1, column=1)
+        tk.Label(frameMode, text=f"IP : {local_ip}").grid(row=2, column=1)
 
     def launchSinglePlayer(self):
         self.destroy()
