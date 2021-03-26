@@ -923,18 +923,9 @@ class ArbreDeplacement():
         """
         def parcours(noeud, lst, PionBase):
             """
-            Permet de retourner les deplacements sous forme de liste simple des pions :
-                -Roi
-
-                -Reine
-
-                -Fou
-
-                -Cavalier
-
-                -Tour
+            Permet de retourner les deplacements sous forme de liste pour les pions
+                
             """
-
             case = noeud.positionPion.lower()
             xPlateau = self.coordLettre.index(case[0])
             yPlateau = self.coordChiffre.index(case[1])
@@ -942,7 +933,7 @@ class ArbreDeplacement():
             coord = self.plateau[yPlateau][xPlateau]
 
             # for i in range(len(noeud.branches)):
-
+            
             if coord is None:
                 lst.append(noeud.positionPion)
                 for fils in noeud.branches:
@@ -952,33 +943,36 @@ class ArbreDeplacement():
                 if coord.couleur != PionBase.couleur:
                     # si la couleur du pion sur le plateau est differente de notre pion
                     lst.append(noeud.positionPion)
-
+            
         def parcoursPion(lst, couleur, PionBase, plateau):
             """
             Permet, si le pion est un pion, de retourner sa propre liste
             """
+            deux_Autorise = False
             liste = []
-
             if couleur == 1:
-                for i in range(len(lst)):
+                for i in range(len(self.racine.branches)):
                     if i == 0:
                         if plateau[self.coordChiffre.index(lst[0][1])][self.coordLettre.index(lst[0][0].lower())] is None:
                             liste.append(lst[0])
                             if lst[0][1] == '3':
-                                if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is None:
-                                    liste.append(lst[1])
-                    else:
-                        if lst[i] not in liste:
-
+                                deux_Autorise = True
+                                
+                    elif i == 1:
+                        if deux_Autorise ==True:
+                            if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is None:
+                                liste.append(lst[1])
+                        else:
+                            
                             if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())] is not None:
                                 if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())].couleur != PionBase.couleur:
                                     liste.append(lst[i])
-                if len(liste) > 1:
-                    if liste[0][0] == liste[1][0]:
-                        if int(liste[0][1]) == int(liste[1][1]) - 1:
-                            if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
-                                liste.pop(1)
+                    else:
+                            if lst[i] not in liste:
 
+                                if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())] is not None:
+                                    if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())].couleur != PionBase.couleur:
+                                        liste.append(lst[i])
                 return liste
 
             else:
@@ -988,46 +982,48 @@ class ArbreDeplacement():
                         if plateau[self.coordChiffre.index(lst[0][1])][self.coordLettre.index(lst[0][0].lower())] is None:
                             liste.append(lst[0])
                             if lst[0][1] == '6':
-                                if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is None:
-                                    liste.append(lst[1])
-                    else:
-                        if lst[i] not in liste:
-
+                                deux_Autorise = True
+                                
+                    elif i == 1:
+                        if deux_Autorise ==True:
+                            if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is None:
+                                liste.append(lst[1])
+                        else:
+                            
                             if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())] is not None:
                                 if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())].couleur != PionBase.couleur:
                                     liste.append(lst[i])
+                    else:
+                            if lst[i] not in liste:
 
-                if len(liste) > 1:
-                    if liste[0][0] == liste[1][0]:
-
-                        if int(liste[0][1]) == int(liste[1][1]) + 1:
-                            if plateau[self.coordChiffre.index(lst[1][1])][self.coordLettre.index(lst[1][0].lower())] is not None:
-                                liste.pop(1)
-
+                                if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())] is not None:
+                                    if plateau[self.coordChiffre.index(lst[i][1])][self.coordLettre.index(lst[i][0].lower())].couleur != PionBase.couleur:
+                                        liste.append(lst[i])
                 return liste
+
+
 
         xPion = self.coordLettre.index(self.position[0].lower())
         yPion = self.coordChiffre.index(self.position[1])
         PionBase = self.plateau[yPion][xPion]
         lst = []
-
-        for fils in self.racine.branches:
-            parcours(fils, lst, PionBase)
-
+        
         if self.valeurPion == "P":
+            for x in self.racine.branches:
+                lst.append(x.positionPion)
             if PionBase.couleur == "W":
                 lst = parcoursPion(lst, 1, PionBase, self.plateau)
-                if len(lst) == 1:
-                    if self.plateau[self.coordChiffre.index(lst[0][1]) + 1][self.coordLettre.index(lst[0][0].lower())] is not None:
-                        lst.pop()
+                
             else:
                 lst = parcoursPion(lst, 0, PionBase, self.plateau)
-                if len(lst) == 1:
-                    if self.plateau[self.coordChiffre.index(lst[0][1]) - 1][self.coordLettre.index(lst[0][0].lower())] is not None:
-                        lst.pop()
+        else:
+            for fils in self.racine.branches:
+                parcours(fils, lst, PionBase)
+
+        
+                
 
         return lst
-
 
 g = Game()
 
