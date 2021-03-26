@@ -1,6 +1,6 @@
 # Chess game
 
-## this is a chess game made for a school project in python (french)
+## Chess game made for a school project in python (french)
 
 ![logo](https://github.com/HerbeMalveillante/Chess_game/blob/master/sprites/logo.PNG "Logo")
 
