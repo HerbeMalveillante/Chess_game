@@ -22,6 +22,4 @@ Présentation :
 [ ] - mettre en forme la présentation dans un notebook jupyter/colab
 
 
-Diagramme de classe : 
-
-![diagramme de classe](https://github.com/HerbeMalveillante/Chess_game/blob/master/DiagrammeClasseChess.png "Diagramme de classe")
+![logo](https://github.com/HerbeMalveillante/Chess_game/blob/master/sprites/logo.PNG "Logo")
