@@ -6,7 +6,9 @@ import numpy as np
 import pygame
 import datetime
 import socket
+import socketio
 import re
+from aiohttp import web
 
 
 # on prépare pygame pour jouer les sons :
@@ -30,6 +32,7 @@ sound2 = pygame.mixer.Sound("sounds/move7.ogg")
 # on sauvegarde toutes ces possibilités dans un nouveau plateau
 # et on fait le test d'échec sur chacun de ces plateaux
 # si y'a aucun plateau qui n'est pas en échec alors c'est échec et mat.
+server = None
 
 
 class Game(tk.Tk):
@@ -82,11 +85,11 @@ class Game(tk.Tk):
             frameMode, text="Héberger une partie en ligne", padx=25, pady=20)
         frameHosting.grid(row=0, column=2)
         # champ pour entrer le port
-        port = tk.StringVar()
-        port.set(f"entrez le port ici (défaut : 4200)")
-        entree = tk.Entry(frameHosting, textvariable=port, width=30).pack()
+        portVar = tk.StringVar()
+        portVar.set(f"entrez le port ici (défaut : 4200)")
+        entree = tk.Entry(frameHosting, textvariable=portVar, width=30).pack()
         tk.Button(frameHosting, text="Héberger une partie en ligne",
-                  command=self.launchHosting).pack()
+                  command=lambda: self.launchHosting(portVar.get())).pack()
 
         # indication de l'ip
         tk.Label(frameMode, text=f"Identifiant : {self.hostname}").grid(
@@ -100,13 +103,42 @@ class Game(tk.Tk):
 
     def launchHosted(self):
         self.destroy()
+
         p = Board("multiplayer_hosted")
         p.mainloop()
 
-    def launchHosting(self):
+    def launchHosting(self, port):
+        global server
         self.destroy()
-        p = Board("multiplayer_hosting")
-        p.mainloop()
+        # p = Board("multiplayer_hosting")
+        # p.mainloop()
+        server = Server(port)
+        server.mainloop()
+
+class Server(tk.Tk):
+
+    def __init__(self, port, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+        self.title("NSICHESS XTREME 2 DELUXE PREMIUM [CRACK] - LOBBY")
+        self.hostname = socket.gethostname()
+        self.local_ip = socket.gethostbyname(self.hostname)
+        self.port = port
+
+        self.sio = socketio.Server()
+        app = socketio.WSGIApp(self.sio)
+
+        @self.sio.event
+        def connect(sid, environ, auth):
+            print(f"Connexion received from {sid}")
+
+        @self.sio.event
+        def disconnect(sid):
+            print(f"{sid} disconnected")
+
+        tk.Label(text="Waiting for connection to the server...").pack()
+        tk.Label(
+            text=f"Server is running on port {self.local_ip}:{self.port}").pack()
+        tk.Label(text="Game will start when a player joins.").pack()
 
 
 class Board(tk.Tk):
