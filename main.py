@@ -288,7 +288,10 @@ class Board(tk.Tk):
         print("flipped the board")
 
     def finPartie(self):
-        pass
+        newWindow = tk.Toplevel(self)
+        newWindow.title(
+            "Fin de partie")
+        tk.Label(newWindow, text="Partie terminée, félicitations au vainqueur !").pack()
 
     def updateDisplay(self):
         """
@@ -413,14 +416,14 @@ class Board(tk.Tk):
                             openPromotionWindow(ligne, colonne)
 
                     # ICI MET LA VERIFICATION POUR SAVOIR SI Y'A TOUJOURS LES DEUX ROIS SINON TU APPELLES self.finPartie()
-                    count=0
+                    count = 0
                     for ligne in range(len(self.plateau)):
                         for case in range(len(self.plateau[ligne])):
                             if self.plateau[ligne][case] is not None:
                                 if self.plateau[ligne][case].valeur == 'R':
-                                    count +=1
+                                    count += 1
 
-                    if count!=2:
+                    if count != 2:
                         self.finPartie()
 
                     # le tour est terminé, on réinitialise les attributs de sélection
@@ -448,7 +451,8 @@ class Board(tk.Tk):
 
         # implémentation du canvas
         # affiche la couleur du joueur dont c'est le tour
-        tk.Label(self, text=f"C'est au tour des {'blancs' if self.tour == 'W' else 'noirs'} de jouer.").grid(row=0, column=0)
+        tk.Label(self, text=f"C'est au tour des {'blancs' if self.tour == 'W' else 'noirs'} de jouer.").grid(
+            row=0, column=0)
         label = tk.Label(self, text="Colonne de débuggage")  # debug
         label.grid(row=0, column=1)
         labelFrame = tk.LabelFrame(
@@ -513,7 +517,6 @@ class Board(tk.Tk):
         # affiche la dernière actualisation du plateau
         tk.Label(
             labelFrame, text=f"updated at {datetime.datetime.now()}").pack()
-        
 
     def __repr__(self):
         """
@@ -1064,4 +1067,3 @@ print('--------------')
 
 g.mainloop()
 # p.updateDisplay()
-

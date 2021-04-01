@@ -65,7 +65,7 @@ J'initialise également un système d'évènements : chaque clic sur le canvas e
 
 Une autre partie importante est la promotion du pion : quand un pion arrive jusqu'à l'autre bout du plateau, il peut se transformer en n'importe quelle autre pièce : je détecte ce mouvement spécifique à la fin du tour et si il permet une promotion, j'ouvre une nouvelle fenêtre permettant au joueur de choisir la nouvelle valeur du pion.
 
-Afin de rendre le tout plus compréhensible, j'ai créé une Classe Game servant de Launcher, et d'autres classes permettant de gérer le multijoueur grâce à une connexion socketio, mais j'ai pas fini ça encore alors je le mets pas encore
+Afin de rendre le tout plus compréhensible, j'ai créé une Classe Game servant de Launcher, et d'autres classes permettant de gérer le multijoueur grâce à une connexion socketio, mais j'ai pas fini ça encore alors je le mets pas encore 
 
 
 PARTIE II: William
