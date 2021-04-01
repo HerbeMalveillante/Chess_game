@@ -66,3 +66,26 @@ J'initialise également un système d'évènements : chaque clic sur le canvas e
 Une autre partie importante est la promotion du pion : quand un pion arrive jusqu'à l'autre bout du plateau, il peut se transformer en n'importe quelle autre pièce : je détecte ce mouvement spécifique à la fin du tour et si il permet une promotion, j'ouvre une nouvelle fenêtre permettant au joueur de choisir la nouvelle valeur du pion.
 
 Afin de rendre le tout plus compréhensible, j'ai créé une Classe Game servant de Launcher, et d'autres classes permettant de gérer le multijoueur grâce à une connexion socketio, mais j'ai pas fini ça encore alors je le mets pas encore
+
+
+PARTIE II: William
+
+Pour commencer, j'ai creer deux classes: la classe ArbreDeplacement, qui permet de generer et retourner tout les coups jouables selon le type du pion que l'on a selectionner (roi, dame, fou, etc) en recuperant ses coordonnees sur le plateau
+Puis, on a une autre classe, la classe Noeud, qui est une classe utiliser par l'ArbreDeplacement, afin de definir, comme avec un arbre binaire, une liste de noeud comme fils.
+
+Dans la classe Noeud, je l'initialise avec 2 attributs, le premier est une chaine de caracteres contenant un emplacement dans la matrice (exemple: A1, H4, ...). Le second, est l'attribut branches, ou l'on sauvegardera tout les fils du noeud sous forme de liste d'objet Noeud.
+Cette classe a plusieur methodes pour chaques pions specifiques: 
+	-un methode roi() qui nous creer tout les fils du noeud selon les regles de deplacement du roi; 
+	-une methode cavalier() pour les deplacement particulier du pion du même nom;
+	-une methode pion(), qui permet de creer ses deplacement très particulier , comme par exemple le fait qu'il ai la possibilité d'avancer de deux cases si le pion n'a pas encore bouger, et enfin, ses deplacements diagonales pour sauter un pion.
+	
+Dans toute ses methodes, les deplacements sont creer sur un plateau vide, et generer via recursivité.
+
+Dans la classe ArbreDeplacement, on initialise plusieur attibuts:
+	-l'attribut racine, permettant de definir un noeud avec la position de base de notre pion, 
+	-deux attibuts pour recuperer sa position sur le plateau ainsi que sa valeur 
+	- d'autre attributs provenant de la classe Board pour verifier chacuns des coups generer grâce a la classe Noeud. 
+	
+Elle a aussi deux methodes:
+	-une pour generer selon la valeur du pion (roi, reine, etc) tout l'arbre de chacun des deplacement possibles, 
+	-et une autre pour parcourir tout l'arbre et recuperer les coordonnees de chaque noeud sauvegarder dans la racine en verifiant chaque case (si une case contient un pion, on verifie sa couleur, et soit on rajoute la case en remontant dans l'arbre, ou en ne rajoutant pas la case et en remontant le plus haut possible dans l'arbre)
