@@ -419,7 +419,7 @@ class Board(tk.Tk):
                             if self.plateau[ligne][case] is not None:
                                 if self.plateau[ligne][case].valeur == 'R':
                                     count +=1
-                    print('count = ',count)
+
                     if count!=2:
                         self.finPartie()
 
