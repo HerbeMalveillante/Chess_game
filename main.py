@@ -413,6 +413,15 @@ class Board(tk.Tk):
                             openPromotionWindow(ligne, colonne)
 
                     # ICI MET LA VERIFICATION POUR SAVOIR SI Y'A TOUJOURS LES DEUX ROIS SINON TU APPELLES self.finPartie()
+                    count=0
+                    for ligne in range(len(self.plateau)):
+                        for case in range(len(self.plateau[ligne])):
+                            if self.plateau[ligne][case] is not None:
+                                if self.plateau[ligne][case].valeur == 'R':
+                                    count +=1
+
+                    if count!=2:
+                        self.finPartie()
 
                     # le tour est terminé, on réinitialise les attributs de sélection
                     self.coupsJouables = []
@@ -1055,3 +1064,4 @@ print('--------------')
 
 g.mainloop()
 # p.updateDisplay()
+
