@@ -438,10 +438,9 @@ class Board(tk.Tk):
                     self.updateDisplay()
 
         # implémentation du canvas
-        label = tk.Label(
-            self, text="ici on peut mettre du texte hihi")  # debug
-        label.grid(row=0, column=0)
-        label = tk.Label(self, text="Texte sur le côté")  # debug
+        # affiche la couleur du joueur dont c'est le tour
+        tk.Label(self, text=f"C'est au tour des {'blancs' if self.tour == 'W' else 'noirs'} de jouer.").grid(row=0, column=0)
+        label = tk.Label(self, text="Colonne de débuggage")  # debug
         label.grid(row=0, column=1)
         labelFrame = tk.LabelFrame(
             self, text="Debug Buttons", width="50")  # debug
@@ -505,10 +504,7 @@ class Board(tk.Tk):
         # affiche la dernière actualisation du plateau
         tk.Label(
             labelFrame, text=f"updated at {datetime.datetime.now()}").pack()
-        # affiche la couleur du joueur dont c'est le tour
-        tk.Label(
-            labelFrame, text=f"{'White' if self.tour == 'W' else 'Black'} have to play.").pack()
-        tk.Label(labelFrame, text=f"Gamemode : {self.gamemode}").pack()
+        
 
     def __repr__(self):
         """
