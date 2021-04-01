@@ -412,6 +412,8 @@ class Board(tk.Tk):
 
                             openPromotionWindow(ligne, colonne)
 
+                    # ICI MET LA VERIFICATION POUR SAVOIR SI Y'A TOUJOURS LES DEUX ROIS SINON TU APPELLES self.finPartie()
+
                     # le tour est terminé, on réinitialise les attributs de sélection
                     self.coupsJouables = []
                     self.selectedCase = None

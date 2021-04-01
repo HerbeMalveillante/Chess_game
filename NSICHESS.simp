@@ -18,10 +18,6 @@
     </entity-names>
     <entity-ids>
       <counter>
-        <item-type type-id="" type="AbstractElementGroup" />
-        <value>11</value>
-      </counter>
-      <counter>
         <item-type type-id="package" type="UmlPackage" />
         <value>2</value>
       </counter>
@@ -32,6 +28,10 @@
       <counter>
         <item-type type-id="relationship" type="UmlAssociation" />
         <value>8</value>
+      </counter>
+      <counter>
+        <item-type type-id="" type="AbstractElementGroup" />
+        <value>4</value>
       </counter>
     </entity-ids>
     <diagrams>
@@ -79,6 +79,7 @@
       <type id="8*8 matrix" tid="" name="8*8 matrix" description="" nullable="false" />
       <type id="Dict" tid="" name="Dict" description="" nullable="false" />
       <type id="Tkinter canvas" tid="" name="Tkinter canvas" description="" nullable="false" />
+      <type id="Class:di555298010354533159" tid="" name="Noeud" description="" nullable="false" class-ref="di555298010354533159" />
     </custom-types>
   </types>
   <filters />
@@ -98,7 +99,7 @@
       </meta>
       <abstract-items />
       <sub-models />
-      <diagram type="uml-class" id="p74848832f1d041a8b81ac735907b60eb_895592180" name="ClassDiagram1" order-index="1" show-id="false" show-name="true" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" show-template-parameters="true" show-fields="true" show-empty-compartments="true" show-special-indicators="false" show-attributes="true" show-attribute-visibility="true" show-operations="true" show-operation-parameters="true" show-operation-visibility="true" show-nullability="true" show-sequence-number="false" show-extension-points="false" show-relationship-texts="true" show-description="false" show-field-description="false" auto-routed-paths="false">
+      <diagram type="uml-class" id="p74848832f1d041a8b81ac735907b60eb_895592180" name="ClassDiagram1" order-index="1" show-id="false" show-name="true" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" show-template-parameters="true" show-fields="true" show-empty-compartments="true" show-special-indicators="false" show-attributes="true" show-attribute-visibility="true" show-operations="true" show-operation-parameters="true" show-operation-visibility="true" show-nullability="true" show-sequence-number="false" show-extension-points="false" show-relationship-texts="true" show-description="false" show-field-description="false" auto-routed-paths="false" view-location="68,-45" zoom="0.7285714">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
@@ -329,7 +330,7 @@
           <item id="di998667956735274987" cid="C005" type="class" name="ArbreDeplacement" style-class="" owner="di124458423865326422" visibility="package" change-tracking-state="added" creator="Pe7fa6a1e7f7042b9aa61931ab3aaa900" creation-date="03/29/2021 16:45:09">
             <style class="default" />
             <attributes>
-              <attribute id="a4e0a959191ff46a9b530d5a18dc9e5ed818" cid="ELEM034" name="racine" type="" type-id="" visibility="public" default-value="Noeud(positionPion) (init argument)">
+              <attribute id="a4e0a959191ff46a9b530d5a18dc9e5ed818" cid="ELEM034" name="racine" type="Noeud" type-id="Class:di555298010354533159" visibility="public" default-value="positionPion (init argument)">
                 <style class="default" />
               </attribute>
               <attribute id="a6450d12a5e7841ba86e0ebeb51a06415925" cid="ELEM035" name="position" type="String" type-id="Uml.String" visibility="public" default-value="positionPion (init arg)">
