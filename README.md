@@ -6,8 +6,91 @@
 
 NSICHESS is a very cool chess game done with Python and Tkinter.
 
-It has really cool features such as :
-- Local Multiplayer
-- Online Multiplayer (on local network)
-- Great performance
-- Beautiful board
+Le jeu d'écec est un jeu de société vieux comme le monde faisant évoluer deux petites armées sur un plateau de 64 cases.
+Chaque joueur dispose d'une collection de seize pièces : huit pions, unités faibles qui ne peuvent qu'aller de l'avant,
+deux tours qui se déplacent sur des lignes horizontales et verticales, deux fous qui se déplacent sur des lignes diagonales,
+deux cavalier qui se déplacent en formant une forme de L, une reine qui se déplace dans toutes les directions, et un roi
+qui peut se déplacer dans toutes les directions, mais d'une case uniquement
+
+Le but du jeu est de mettre le roi adverse en échec et mat : c'est à dire le mettre dans une position où il est sûr de se faire
+manger au coup suivant quelque soit le coup joué.
+
+En effet, les pièces du jeu d'échec peuvent en manger d'autres du camp adverses en se déplaçant sur leur position
+
+Depuis les débuts de l'informatique, la programmation d'un jeu d'échec permet de s'exercer et de valider des compétences en
+programmation avancées. De plus, les échecs furent un des premiers jeux où l'ordinateur a battu l'Homme, (première victoire
+de Deep Blue (IBM) contre Kasparov en 1997) , et grâce aux avancées de l'Intelligence Artificielle, des algorithmes comme
+StockFish sont désormais des dizaines de fois plus forts que les meilleurs joueurs humains.
+
+Nous avons donc décider de tenter l'experience et de programmer un jeu d'échec à notre façon en moins de vingt heures
+à l'occasion des projets de fin d'année en NSI.
+
+
+Il permet de jouer aux échecs en multijoueur local, à deux sur un ordinateur, ou bien 
+en multijoueur en ligne sur un réseau local, avec un joueur par machine, le tout avec
+une navigation à la souris grâce à une interface graphique.
+
+La plupart des concepts et des règles des échecs sont implémentés : 
+- mouvement des pièces
+- manger une pièce
+- affichage des coups jouables
+- partie au tour par tour
+- promotion des pions
+- mouvements spéciaux des pions
+- échec
+- échec et mat
+
+Nous avons décidé de travailler par deux et donc de séparer le travail : 
+
+Je (Pacôme) me suis occupé de toute la partie de l'interface graphique (affichage du plateau,
+mouvement des pièces, interaction homme-machine, gestion des tours et affichage des coups légaux) ainsi
+que (du début) de la liaison multijoueur (connexion socketIO avec serveur web aioHTTP).
+
+William s'est occupé de toute la partie algorithmique, c'est à dire calcul des coups légaux,
+des déplacements complexes des pièces (relatifs par rapport à la position des autres pièces sur le plateau),
+ainsi que des conditions de victoire (échec, échec et mat) grâce à des arbres.
+
+
+PARTIE I : Pacôme
+
+La première chose que j'ai faite, c'est représenter le plateau de jeu grâce à une classe "Board".
+Cette classe contient tous les attributs qui composent une partie : les statistiques, l'état du plateau, etc.
+
+Un argument notable est l'argument plateau, une matrice de huit par huit qui représente le plateau de jeu. Chaque emplacement peut contenir un objet de la clase Pion (que j'ai également créé, un pion a un attribut de couleur et un attribut de valeur) ou bien un None. Ainsi, on peut savoir exactement la pièce que contient chaque case du plateau.
+
+La suite logique a ensuite été de créer une interface graphique afin de pouvoir visualiser ces emplacement et les modifier plus convenablement.
+
+La méthode la plus importante permettant de gérer l'interface graphique est la méthode UpdateDisplay : elle actualise le plateau de jeu et initialise les actions que l'utilisateur peut faire.
+
+Ma fenêtre Tkinter est composée d'un canvas et de quelques boutons et labels de débuggage.
+
+Le canvas est l'élement principal : à chaque appel de la méthode, je nettoie tout le canvas et je dessine une grille ainsi que les coordonnées des cases. Je dessine ensuite les bonnes pièces à chaque emplacement afin de représenter la matrice plateau.
+
+J'initialise également un système d'évènements : chaque clic sur le canvas est enregistré, ainsi que ses coordonnées : je peux de ce fait détecter sur quelle case l'utilisateur a cliqué et donc le pion qu'elle contient. Cliquer sur une case non vide de notre couleur permet de sélectionner une pièce et d'afficher la liste des coups légaux grâce à l'algorithme de William. Cliquer sur une case vide ou une case adverse alors qu'une pièce est sélectionnée permet de la déselectionner. Cliquer sur une position légale avec un pion sélectionné déplace ce pion. J'actualise alors la position des pions dans la matrice plateau, je joue un son, j'actualise l'écran et je définis le tour au joueur adverse afin qu'il joue.
+
+Une autre partie importante est la promotion du pion : quand un pion arrive jusqu'à l'autre bout du plateau, il peut se transformer en n'importe quelle autre pièce : je détecte ce mouvement spécifique à la fin du tour et si il permet une promotion, j'ouvre une nouvelle fenêtre permettant au joueur de choisir la nouvelle valeur du pion.
+
+Afin de rendre le tout plus compréhensible, j'ai créé une Classe Game servant de Launcher, et d'autres classes permettant de gérer le multijoueur grâce à une connexion socketio, mais j'ai pas fini ça encore alors je le mets pas encore 
+
+
+PARTIE II: William
+
+Pour commencer, j'ai creer deux classes: la classe ArbreDeplacement, qui permet de generer et retourner tout les coups jouables selon le type du pion que l'on a selectionner (roi, dame, fou, etc) en recuperant ses coordonnees sur le plateau
+Puis, on a une autre classe, la classe Noeud, qui est une classe utiliser par l'ArbreDeplacement, afin de definir, comme avec un arbre binaire, une liste de noeud comme fils.
+
+Dans la classe Noeud, je l'initialise avec 2 attributs, le premier est une chaine de caracteres contenant un emplacement dans la matrice (exemple: A1, H4, ...). Le second, est l'attribut branches, ou l'on sauvegardera tout les fils du noeud sous forme de liste d'objet Noeud.
+Cette classe a plusieur methodes pour chaques pions specifiques: 
+	-un methode roi() qui nous creer tout les fils du noeud selon les regles de deplacement du roi; 
+	-une methode cavalier() pour les deplacement particulier du pion du même nom;
+	-une methode pion(), qui permet de creer ses deplacement très particulier , comme par exemple le fait qu'il ai la possibilité d'avancer de deux cases si le pion n'a pas encore bouger, et enfin, ses deplacements diagonales pour sauter un pion.
+	
+Dans toute ses methodes, les deplacements sont creer sur un plateau vide, et generer via recursivité.
+
+Dans la classe ArbreDeplacement, on initialise plusieur attibuts:
+	-l'attribut racine, permettant de definir un noeud avec la position de base de notre pion, 
+	-deux attibuts pour recuperer sa position sur le plateau ainsi que sa valeur 
+	- d'autre attributs provenant de la classe Board pour verifier chacuns des coups generer grâce a la classe Noeud. 
+	
+Elle a aussi deux methodes:
+	-une pour generer selon la valeur du pion (roi, reine, etc) tout l'arbre de chacun des deplacement possibles, 
+	-et une autre pour parcourir tout l'arbre et recuperer les coordonnees de chaque noeud sauvegarder dans la racine en verifiant chaque case (si une case contient un pion, on verifie sa couleur, et soit on rajoute la case en remontant dans l'arbre, ou en ne rajoutant pas la case et en remontant le plus haut possible dans l'arbre)
